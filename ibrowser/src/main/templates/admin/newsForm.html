@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>John Lewis - iBrowser</title>
+
+<script src="/ckeditor/ckeditor.js" type="text/javascript"></script>
+
+#include("head.html")
+
+<script type="text/javascript">
+
+$(function() { 
+	 CKEDITOR.replace('editor1', {
+			uiColor: '#B1D2AB',
+			
+			//filebrowserUploadUrl: '/upload?Type=Image',
+			//filebrowserImageUploadUrl:'/upload?Type=Image',
+			//filebrowserBrowseUrl: '/upload/',
+		    //filebrowserImageBrowseUrl: '/admin?type=Images',
+		    filebrowserUploadUrl: '/admin/upload',
+		    filebrowserImageUploadUrl: '/admin/upload?type=Images'
+	 });
+});
+
+$(function(){
+	  
+	<!-- title validation -->
+	$('#title').change(function() {
+		if($('#title').val()){
+		  $('#form-group-title').removeClass().addClass('form-group');		
+		}else{
+			$('#form-group-title').removeClass().addClass('form-group has-error');
+		}
+     });
+	
+	 <!-- datepicker validation -->	
+	  
+	  $("#datepicker").datepicker({
+	 		 format: "dd/mm/yyyy",
+	 		 keyboardNavigation: false,
+	 		 autoclose: true
+	 	}).on('changeDate', function(event) {
+	 		 var d = $("#datepicker").val()    
+	 		 if(!d){
+	 			 $('#datepicker').css('border','1px solid #a94442');
+	 			 $('#form-group-date').removeClass().addClass('form-group has-error');	  
+	 		  } else {
+	 			  $('#form-group-date').removeClass().addClass('form-group');	 
+	 			  $('#datepicker').css('border','1px solid #CCCCCC');
+	 		  }
+	 	 });  
+  });
+  
+  <!--  Submit Form --> 
+  $(function(){
+  	window.submitForm = function () {
+  		
+  		var hasError = false;
+  		var titleVal = $('#title').val();
+		var descriptionVal = CKEDITOR.instances['editor1'].getData();
+		var dateVal = $('#datepicker').val();
+		
+  		<!-- title validation -->
+  	 	if(titleVal){
+  			$('#form-group-title').removeClass().addClass('form-group');	
+  		}else{
+  			hasError=true ;
+  			$('#form-group-title').removeClass().addClass('form-group has-error');	
+  		}
+  	 	
+  	    <!-- datepicker validation -->	
+  	 	
+  	 	if(!dateVal){
+			 $('#datepicker').css('border','1px solid #a94442');
+			 $('#form-group-date').removeClass().addClass('form-group has-error');	  
+		  } else {
+			  $('#form-group-date').removeClass().addClass('form-group');	 
+			  $('#datepicker').css('border','1px solid #CCCCCC');
+		  }
+  	 	  if(!hasError){
+			$('#form').submit();
+			//window.parent.closePopup(true);
+	      }
+  	 	 /* if(!hasError){
+			$.ajax({
+				url: '/admin/news/'+keyVal+'/action',
+				type: 'POST',
+				data: JSON.stringify({key: keyVal, title: titleVal, description: descriptionVal, date: dateVal}),
+				contentType: 'text/json',
+				success: function(data){
+				  window.parent.closePopup(true);
+				}
+			});
+		 } */
+  	  }
+  });
+
+  
+</script> 
+</head>
+<body>
+#set($news = $request.getAttribute('news'))
+
+<div style="width: 700px;margin:auto;padding-top: 15px;">
+<form class="form-horizontal" role="form" action="/admin/news/$!news.getKeyAsString()/action" method="post" id="form">
+   
+ <!--   <input type="hidden" value="$!news.getKeyAsString()" name="key" id="key" />  -->
+    
+   <div class="form-group" id="form-group-title">
+    <label for="title" class="col-sm-3 control-label">Title<font color="red">*</font>:</label>
+    <div class="col-sm-9">      
+      <input type="text" value="$!news.getTitle()"  name="title" class="form-control" id="title"/>
+    </div>
+  </div>
+
+ <div class="form-group" id="form-group-date">
+    <label for="date" class="col-sm-3 control-label">Date:<font color="red">*</font></label>
+    <div class="col-sm-9" id="datepicker-content">
+       <input type="text" id="datepicker" value="$!news.getDateAsString()" placeholder="$!news.getDateAsString()"  name="date" class="form-control"/>
+    </div>     
+  </div>  
+  
+  <div class="form-group" id="form-group-description">
+    <label for="date" class="col-sm-3 control-label">Description:</label>
+    <div class="col-sm-9">
+     <textarea name="description" id="editor1">$!news.getDescription()</textarea>
+ 	 </div>
+  </div>
+
+</form>
+</div>
+</body>
+</html>

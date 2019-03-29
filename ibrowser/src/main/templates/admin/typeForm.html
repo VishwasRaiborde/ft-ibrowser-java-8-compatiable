@@ -1,0 +1,175 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>John Lewis - iBrowser</title>
+#include("head.html")
+
+<script type="text/javascript">
+
+$(function () {
+	<!-- type divisional validation -->
+	 if('DIVISIONAL'== $("#name option:selected").val()){
+		 $('#groupCode').val('000')
+		 $('#groupCode').attr("disabled", true);
+	 }
+	 
+	$('#name').change(function() {
+        if ('DIVISIONAL' == $(this).find(':selected').val()) {
+        	$('#groupCode').val('000')
+        	$('#groupCode').attr("disabled", true);
+        	$('#form-group-code').removeClass().addClass('form-group');
+		   }
+        else {
+        	$('#groupCode').val('')
+        	$('#groupCode').removeAttr("disabled"); 
+        }
+        if ('PLEASE_SELECT' == $(this).find(':selected').val()) {
+        	 $('#form-group-type').removeClass().addClass('form-group has-error');
+           }
+        else{
+        	$('#form-group-type').removeClass().addClass('form-group');
+        }
+        });
+	
+	<!-- group name validation --> 
+	$('#groupName').change(function() {
+		if($('#groupName').val()){
+	    	$('#form-group-name').removeClass().addClass('form-group');		
+		}else{
+			$('#form-group-name').removeClass().addClass('form-group has-error');
+		}
+     });
+	<!-- validation group code -->
+	$('#groupCode').change(function() {
+	 
+		if($('#groupCode').val()){
+			$('#form-group-code').removeClass().addClass('form-group');
+		}else{
+			$('#form-group-code').removeClass().addClass('form-group has-error');
+		}
+     });
+	
+});
+
+<!--  Submit Form --> 
+$(function(){
+	window.submitForm = function () {
+		
+		var buyingPtn = '^[0-9]{4,6}$' ;
+		var branchPtn = '^[0-9]{3}$' ;
+		var key =  $('#key').val();
+		var type =  $("#name").val();
+		var code = $('#groupCode').val();
+		var groupName = $('#groupName').val();
+		var hasError = false;
+		var errorMsg = "";
+		
+		<!-- type validation -->
+		
+		if('PLEASE_SELECT'==type){
+			 hasError=true ;
+			 $('#form-group-type').removeClass().addClass('form-group has-error');
+		 }if('BUYING'==type){
+				if(!code.match(buyingPtn)){
+					hasError=true ;
+					$('#form-group-code').removeClass().addClass('form-group has-error');
+					 /* bootbox.alert("Buying office group code should be match ^[0-9]{4,6}$ pattern", function() {
+						   
+					 }); */
+					 errorMsg="Buying office group code should be match ^[0-9]{4,6}$ pattern"
+					 
+				}
+		 }if('BRANCH'==type){
+				if(!code.match(branchPtn)){
+					hasError=true ;
+					$('#form-group-code').removeClass().addClass('form-group has-error');
+					 /* bootbox.alert("Branch group code should be match ^[0-9]{3}$ pattern", function() {
+						   
+					 }); */
+					 errorMsg="Branch group code should be match ^[0-9]{3}$ pattern";
+				}
+		}
+	  <!-- group name validation -->
+		 
+		if(groupName){
+			$('#form-group-name').removeClass().addClass('form-group');	
+		}else{
+			hasError=true ;
+			$('#form-group-name').removeClass().addClass('form-group has-error');	
+		}
+	  <!-- code validation -->
+	     if(code){
+	    	 $('#form-group-code').removeClass().addClass('form-group');  
+	     }else{
+	    	 hasError=true ;
+	    	 $('#form-group-code').removeClass().addClass('form-group has-error');  
+	     }
+	     
+	    	 $.ajax({
+				 url: '/admin/typeValidation',
+				 type: 'POST',
+				 data: JSON.stringify({key:key,type:type,groupCode:code,groupName:groupName}),
+				 contentType: 'text/json',
+				 success: function(validation) {
+					 
+					 if("groupCodeExist"==validation){
+						 errorMsg="Group code "+code+" already exist<br>";
+						 hasError = true;
+					 }else if("groupNameExist"==validation){
+						 errorMsg="Group name "+groupName+" already exist<br>"; 
+						 hasError = true;
+					 }else if("bothExist"==validation){
+						 errorMsg="Group name "+groupName+" and group code "+code+" already exist<br>"; 
+						 hasError = true;
+					 }/* else if("bothNew"==validation){
+						 hasError = false;
+					 } */
+					 
+					 if(hasError){
+						 bootbox.alert(errorMsg, function() {
+								$('#form-group-code').removeClass().addClass('form-group has-error');  
+							}); 
+					 }
+					 else if(!hasError){
+						  $('#form').submit();			
+					  }
+				  }
+		     });	     
+	 }
+});
+
+</script>
+</head>
+<body>
+#set($type = $request.getAttribute('type'))
+
+<div style="width: 530px;margin:auto;padding-top: 15px;">
+<form class="form-horizontal" role="form" action="/admin/type/$!type.getKeyAsString()/action" method="post" id="form">
+ <input id="key" type="hidden" name="key" value="$!type.getKeyAsString()">
+  <div class="form-group" id="form-group-type">
+    <label for="name" class="col-sm-3 control-label">Type<font color="red">*</font>:</label>
+    <div class="col-sm-9">  
+       <select class="form-control" name="name" id="name">
+       <option value="PLEASE_SELECT" >Please select</option>
+	  #foreach($t in $type.getTypeList())
+	   <option value="$t.getCode()" #if($type.getType().getCode() == $t.getCode()) selected #end>$t.getName()</option>
+       #end
+     </select>
+    </div>
+  </div>
+   <div class="form-group" id="form-group-name">
+    <label for="group" class="col-sm-3 control-label">OU Name<font color="red">*</font>:</label>
+    <div class="col-sm-9">      
+      <input type="text" value="$!type.getGroupName()"  name="groupName" class="form-control" id="groupName"/>
+    </div>
+  </div>
+  <div class="form-group" id="form-group-code">
+    <label for="groupCode" class="col-sm-3 control-label">OU Code<font color="red">*</font>:</label>
+    <div class="col-sm-9">
+       <input type="text" value="$!type.getGroupCode()"  name="groupCode" class="form-control" id="groupCode"/>
+     </div>
+  </div>
+</form>
+</div>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>John Lewis - iBrowser</title>
+#include("head.html")
+
+<script type="text/javascript">
+  
+ getFavouriteReports();
+ 
+ 
+ $(function(){
+	  $.ajax({
+		 url: '/app/user',
+		 type: 'GET',
+		 contentType: 'text/json',
+		 success: function(user) {
+			$('#username').append(user.email);
+			if(user.userBranch){
+			 $('#user-branch').append(user.userBranch);
+			}
+			/*
+			if(!user.isAdmin){
+			  $('#admin-link').css("display","none");
+			  $('#admin-font').css("display","none");
+			}*/
+			if(user.isAdmin){
+			  $('#admin-link').css("display","inline");
+			  $('#admin-font').css("display","inline");
+			}
+		  }
+		});
+   });
+
+ $(function(){
+    $.ajax({
+			url: '/app',
+			type: 'POST',
+			contentType: 'text/json',
+			success: function(data) {
+				$('#nav').html('');
+				$('#nav').append('<li class="side_nav_title"> All reports </li>');
+				if (data.length > 0) {
+					$.each(data, function(index, item) {
+						var row = '<li><a href="/app/heading/'+item.keyAsString+'">' + item.name + '</a></li>';
+						$('#nav').append(row);
+					});
+				}
+			}
+		});
+    });
+ 
+ </script>
+ 
+</head>
+
+<body>
+
+<div class="header-background no-print">
+   <div class="container">
+    <div class="main-header">
+    <div class="row-fluid">
+			<div id="logo">
+			<div class="app-image"><a href="/app"><img src="https://johnlewis-comms.appspot.com/resources/img/logo-white.png"></a></div>
+			<div class="app-name">iBrowser</div>
+			</div>
+			  
+			  <div id="partner_details">
+				<span id="username" style="float:left"> </span>
+				<font id="bracn-font" color="#fff">&nbsp;::</font>
+				<span id="user-branch"></span>
+				<font color="#6B8E23">&nbsp;&nbsp;|&nbsp;&nbsp;</font>
+				<a id="admin-link" href="/admin" style="color:#B1D2AB;display:none">Admin</a>
+				<font id="admin-font" color="#6B8E23" style="display:none">&nbsp;&nbsp;|&nbsp;&nbsp;</font>
+				<a href="/logout" style="color:#B1D2AB">Log out</a>
+			   </div>
+			  
+			
+			</div>
+		</div>	
+  </div>
+</div>
+
+<div class="title no-print">
+	<div class="container">
+	Welcome to iBrowser
+	</div>
+</div>
+
+<div class="container">
+
+<div id="side_nav">
+
+<ul id="favourite_reports">
+	<li class="side_nav_title">My favourite reports</li>		
+</ul>
+
+<ul id="nav">
+	<li class="side_nav_title">All reports</li>	 
+</ul>
+
+<ul id="search">
+	<li class="side_nav_title">Search</li>
+	<li><a href="/app/search">Search</a></li>		 
+</ul>
+
+</div><!--side_nav-->
+
+<div id="content_holder">
+	#parse($request.getAttribute("content_holder"))
+</div><!--content_holder-->
+
+</div><!--container-->
+
+</body>
+
+</html>

@@ -1,0 +1,635 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.zensar.ibrowser</groupId>
+	<artifactId>ibrowser</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<properties>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+	</properties>
+	<packaging>war</packaging>
+
+	<build>
+		<sourceDirectory>src/main/java</sourceDirectory>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<directory>src/main/templates</directory>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.7.0</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.2.1</version>
+				<configuration>
+					<warSourceDirectory>war</warSourceDirectory>
+				</configuration>
+			</plugin>
+			<!-- <plugin> <groupId>org.datanucleus</groupId> <artifactId>datanucleus-maven-plugin</artifactId> 
+				<version>5.0.2</version> <configuration> <log4jConfiguration>${basedir}/log4j.properties</log4jConfiguration> 
+				<verbose>true</verbose> </configuration> <executions> <execution> <phase>process-classes</phase> 
+				<goals> <goal>enhance</goal> </goals> </execution> </executions> </plugin> -->
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>appengine-maven-plugin</artifactId>
+				<version>1.9.73</version>
+			</plugin>
+			<plugin>
+				<groupId>org.datanucleus</groupId>
+				<artifactId>maven-datanucleus-plugin</artifactId>
+				<version>3.2.0-m1</version>
+				<configuration>
+					<api>JDO</api>
+					<log4jConfiguration>${basedir}/src/main/resources/log4j.properties</log4jConfiguration>
+					<props>${basedir}/datanucleus.properties</props>
+					<verbose>true</verbose>
+					<enhancerName>ASM</enhancerName>
+					<fork>false</fork>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>enhance</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.datanucleus</groupId>
+						<artifactId>datanucleus-core</artifactId>
+						<version>3.1.3</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<!-- Compile/runtime dependencies -->
+		<!-- <dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>javax.servlet.jsp-api</artifactId>
+			<version>2.3.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>jstl</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.googlecode.objectify</groupId>
+			<artifactId>objectify</artifactId>
+			<version>5.1.22</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.endpoints</groupId>
+			<artifactId>endpoints-framework</artifactId>
+			<version>2.2.1</version>
+		</dependency> -->
+		<!-- <dependency>
+			<groupId>com.google.appengine</groupId>
+			<artifactId>appengine-api-1.0-sdk</artifactId>
+			<version>1.9.73</version>
+		</dependency> -->
+
+
+		<!-- https://mvnrepository.com/artifact/aopalliance/aopalliance -->
+		<dependency>
+			<groupId>aopalliance</groupId>
+			<artifactId>aopalliance</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.appengine/appengine-api-1.0-sdk -->
+		<dependency>
+			<groupId>com.google.appengine</groupId>
+			<artifactId>appengine-api-1.0-sdk</artifactId>
+			<version>1.8.2</version>
+		</dependency>
+
+	<!-- https://mvnrepository.com/artifact/com.google.api-client/google-api-client -->
+		<dependency>
+			<groupId>com.google.api-client</groupId>
+			<artifactId>google-api-client</artifactId>
+			<!-- <version>1.7.0-beta</version> -->
+			<version>1.23.0</version>
+		</dependency>
+				<!-- https://mvnrepository.com/artifact/com.google.http-client/google-http-client -->
+		<dependency>
+			<groupId>com.google.http-client</groupId>
+			<artifactId>google-http-client</artifactId>
+			<!-- <version>1.17.0-rc</version> -->
+			<version>1.23.0</version>
+		</dependency>
+				<!-- https://mvnrepository.com/artifact/com.google.http-client/google-http-client-jackson2 -->
+		<dependency>
+			<groupId>com.google.http-client</groupId>
+			<artifactId>google-http-client-jackson2</artifactId>
+			<!-- <version>1.17.0-rc</version> -->
+			<version>1.23.0</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.google.appengine/appengine-jsr107cache -->
+		<dependency>
+			<groupId>com.google.appengine</groupId>
+			<artifactId>appengine-jsr107cache</artifactId>
+			<version>1.8.2</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils -->
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>1.8.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.8</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload -->
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.3.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.4</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/commons-jexl/commons-jexl -->
+		<dependency>
+			<groupId>commons-jexl</groupId>
+			<artifactId>commons-jexl</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/commons-logging/commons-logging -->
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/dom4j/dom4j -->
+		<dependency>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>1.6.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.easymock/easymock -->
+		<dependency>
+			<groupId>org.easymock</groupId>
+			<artifactId>easymock</artifactId>
+			<version>3.2</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.endpoints/endpoints-framework -->
+		<dependency>
+			<groupId>com.google.endpoints</groupId>
+			<artifactId>endpoints-framework</artifactId>
+			<version>2.1.2</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.geronimo.specs/geronimo-jpa_2.0_spec -->
+		<dependency>
+			<groupId>org.apache.geronimo.specs</groupId>
+			<artifactId>geronimo-jpa_2.0_spec</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.api-client/google-api-client-android -->
+		<dependency>
+			<groupId>com.google.api-client</groupId>
+			<artifactId>google-api-client-android</artifactId>
+			<version>1.17.0-rc</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.api-client/google-api-client-appengine -->
+		<dependency>
+			<groupId>com.google.api-client</groupId>
+			<artifactId>google-api-client-appengine</artifactId>
+			<version>1.17.0-rc</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.api-client/google-api-client-gson -->
+		<dependency>
+			<groupId>com.google.api-client</groupId>
+			<artifactId>google-api-client-gson</artifactId>
+			<version>1.17.0-rc</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.api-client/google-api-client-jackson2 -->
+		<dependency>
+			<groupId>com.google.api-client</groupId>
+			<artifactId>google-api-client-jackson2</artifactId>
+			<version>1.17.0-rc</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.api-client/google-api-client-java6 -->
+		<dependency>
+			<groupId>com.google.api-client</groupId>
+			<artifactId>google-api-client-java6</artifactId>
+			<version>1.17.0-rc</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.api-client/google-api-client-servlet -->
+		<dependency>
+			<groupId>com.google.api-client</groupId>
+			<artifactId>google-api-client-servlet</artifactId>
+			<version>1.17.0-rc</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-admin-directory -->
+		<dependency>
+			<groupId>com.google.apis</groupId>
+			<artifactId>google-api-services-admin-directory</artifactId>
+			<version>directory_v1-rev22-1.17.0-rc</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-bigquery -->
+		<dependency>
+			<groupId>com.google.apis</groupId>
+			<artifactId>google-api-services-bigquery</artifactId>
+			<version>v2-rev129-1.17.0-rc</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-drive -->
+		<dependency>
+			<groupId>com.google.apis</groupId>
+			<artifactId>google-api-services-drive</artifactId>
+			<version>v2-rev111-1.17.0-rc</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.http-client/google-http-client-android -->
+		<dependency>
+			<groupId>com.google.http-client</groupId>
+			<artifactId>google-http-client-android</artifactId>
+			<version>1.17.0-rc</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.http-client/google-http-client-appengine -->
+		<dependency>
+			<groupId>com.google.http-client</groupId>
+			<artifactId>google-http-client-appengine</artifactId>
+			<version>1.17.0-rc</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.http-client/google-http-client-gson -->
+		<dependency>
+			<groupId>com.google.http-client</groupId>
+			<artifactId>google-http-client-gson</artifactId>
+			<version>1.17.0-rc</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.http-client/google-http-client-jdo -->
+		<dependency>
+			<groupId>com.google.http-client</groupId>
+			<artifactId>google-http-client-jdo</artifactId>
+			<version>1.17.0-rc</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.oauth-client/google-oauth-client -->
+		<dependency>
+			<groupId>com.google.oauth-client</groupId>
+			<artifactId>google-oauth-client</artifactId>
+			<version>1.17.0-rc</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.oauth-client/google-oauth-client-appengine -->
+		<dependency>
+			<groupId>com.google.oauth-client</groupId>
+			<artifactId>google-oauth-client-appengine</artifactId>
+			<version>1.17.0-rc</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.oauth-client/google-oauth-client-java6 -->
+		<dependency>
+			<groupId>com.google.oauth-client</groupId>
+			<artifactId>google-oauth-client-java6</artifactId>
+			<version>1.17.0-rc</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.oauth-client/google-oauth-client-jetty -->
+		<dependency>
+			<groupId>com.google.oauth-client</groupId>
+			<artifactId>google-oauth-client-jetty</artifactId>
+			<version>1.17.0-rc</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.oauth-client/google-oauth-client-servlet -->
+		<dependency>
+			<groupId>com.google.oauth-client</groupId>
+			<artifactId>google-oauth-client-servlet</artifactId>
+			<version>1.17.0-rc</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.2.2</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>16.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.inject/guice -->
+		<dependency>
+			<groupId>com.google.inject</groupId>
+			<artifactId>guice</artifactId>
+			<version>3.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.inject.extensions/guice-assistedinject -->
+		<dependency>
+			<groupId>com.google.inject.extensions</groupId>
+			<artifactId>guice-assistedinject</artifactId>
+			<version>3.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.inject.extensions/guice-multibindings -->
+		<dependency>
+			<groupId>com.google.inject.extensions</groupId>
+			<artifactId>guice-multibindings</artifactId>
+			<version>3.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.inject.extensions/guice-servlet -->
+		<dependency>
+			<groupId>com.google.inject.extensions</groupId>
+			<artifactId>guice-servlet</artifactId>
+			<version>3.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.inject.extensions/guice-throwingproviders -->
+		<dependency>
+			<groupId>com.google.inject.extensions</groupId>
+			<artifactId>guice-throwingproviders</artifactId>
+			<version>3.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.3.2</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient-cache -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient-cache</artifactId>
+			<version>4.3.2</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpcore -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+			<version>4.3.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>2.1.3</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/javax.jdo/jdo-api -->
+		<dependency>
+			<groupId>javax.jdo</groupId>
+			<artifactId>jdo-api</artifactId>
+			<version>3.0.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.jdo/jdo2-api -->
+		<dependency>
+			<groupId>javax.jdo</groupId>
+			<artifactId>jdo2-api</artifactId>
+			<version>2.3-eb</version>
+		</dependency>
+
+
+		<!-- https://mvnrepository.com/artifact/joda-time/joda-time -->
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>2.3</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/net.sf.jsr107cache/jsr107cache -->
+		<dependency>
+			<groupId>net.sf.jsr107cache</groupId>
+			<artifactId>jsr107cache</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305 -->
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>jsr305</artifactId>
+			<version>1.3.9</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.transaction/jta -->
+		<dependency>
+			<groupId>javax.transaction</groupId>
+			<artifactId>jta</artifactId>
+			<version>1.1</version>
+		</dependency>
+
+
+		<!-- https://mvnrepository.com/artifact/javax.servlet/servlet-api -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.transaction/transaction-api -->
+		<dependency>
+			<groupId>javax.transaction</groupId>
+			<artifactId>transaction-api</artifactId>
+			<version>1.1</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.velocity/velocity -->
+		<dependency>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity</artifactId>
+			<version>1.7</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.velocity/velocity-tools -->
+		<dependency>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity-tools</artifactId>
+			<version>2.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.datanucleus/datanucleus-api-jdo -->
+		<dependency>
+			<groupId>org.datanucleus</groupId>
+			<artifactId>datanucleus-api-jdo</artifactId>
+			<version>3.1.3</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.appengine.orm/datanucleus-appengine -->
+		<dependency>
+			<groupId>com.google.appengine.orm</groupId>
+			<artifactId>datanucleus-appengine</artifactId>
+			<version>2.1.2</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.datanucleus/datanucleus-core -->
+		<dependency>
+			<groupId>org.datanucleus</groupId>
+			<artifactId>datanucleus-core</artifactId>
+			<version>3.1.3</version>
+		</dependency>
+
+		<!-- endoresed from web lib as cannot track these ones from m2 repo -->
+		<dependency>
+			<artifactId>appengine-api-1.0-sdk-1.9.64</artifactId>
+			<groupId>appengine-api-1.0-sdk-1.9.64</groupId>
+			<scope>system</scope>
+			<version>0</version>
+			<systemPath>${basedir}/war/WEB-INF/lib/appengine-api-1.0-sdk-1.9.64.jar</systemPath>
+		</dependency>
+		<dependency>
+			<artifactId>appengine-api-labs</artifactId>
+			<groupId>appengine-api-labs.jar</groupId>
+			<scope>system</scope>
+			<version>0</version>
+			<systemPath>${basedir}/war/WEB-INF/lib/appengine-api-labs.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<artifactId>appengine-mapreduce</artifactId>
+			<groupId>appengine-mapreduce.jar</groupId>
+			<scope>system</scope>
+			<version>0</version>
+			<systemPath>${basedir}/war/WEB-INF/lib/appengine-mapreduce.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<artifactId>appengine-pipeline</artifactId>
+			<groupId>appengine-pipeline.jar</groupId>
+			<scope>system</scope>
+			<version>0</version>
+			<systemPath>${basedir}/war/WEB-INF/lib/appengine-pipeline.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<artifactId>appengine-tools-api-1.2.0</artifactId>
+			<groupId>appengine-tools-api-1.2.0.jar</groupId>
+			<version>0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/war/WEB-INF/lib/appengine-tools-api-1.2.0.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<artifactId>asm-4.0</artifactId>
+			<groupId>asm-4.0</groupId>
+			<version>0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/war/WEB-INF/lib/asm-4.0.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<artifactId>google-api-services-storage-v1-rev21-1.19.0</artifactId>
+			<groupId>google-api-services-storage-v1-rev21-1.19.0</groupId>
+			<version>0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/war/WEB-INF/lib/google-api-services-storage-v1-rev21-1.19.0.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<artifactId>javax.inject-2.1.71</artifactId>
+			<groupId>javax.inject-2.1.71</groupId>
+			<version>0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/war/WEB-INF/lib/javax.inject-2.1.71.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<artifactId>jetty-6.1.26</artifactId>
+			<groupId>jetty-6.1.26</groupId>
+			<version>0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/war/WEB-INF/lib/jetty-6.1.26.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<artifactId>jetty-util-6.1.26</artifactId>
+			<groupId>jetty-util-6.1.26</groupId>
+			<version>0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/war/WEB-INF/lib/jetty-util-6.1.26.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<artifactId>json</artifactId>
+			<groupId>json</groupId>
+			<version>0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/war/WEB-INF/lib/json.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<artifactId>litemvc-0.1.2</artifactId>
+			<groupId>litemvc-0.1.2</groupId>
+			<version>0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/war/WEB-INF/lib/litemvc-0.1.2.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<artifactId>log4j-1.2.13</artifactId>
+			<groupId>log4j-1.2.13</groupId>
+			<version>0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/war/WEB-INF/lib/log4j-1.2.13.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<artifactId>velocity-1.7-dep</artifactId>
+			<groupId>velocity-1.7-dep</groupId>
+			<version>0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/war/WEB-INF/lib/velocity-1.7-dep.jar</systemPath>
+		</dependency>
+		
+		<dependency>
+			<artifactId>fastutil_small</artifactId>
+			<groupId>fastutil_small</groupId>
+			<version>0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/war/WEB-INF/lib/fastutil_small.jar</systemPath>
+		</dependency>
+		
+		<dependency>
+			<artifactId>appengine-gcs-client</artifactId>
+			<groupId>appengine-gcs-client</groupId>
+			<version>0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/war/WEB-INF/lib/appengine-gcs-client.jar</systemPath>
+		</dependency>
+
+	<dependency>
+<groupId>com.googlecode.objectify</groupId>
+<artifactId>objectify</artifactId>
+<version>6.0.3</version>
+</dependency>
+<dependency>
+<groupId>com.google.cloud</groupId>
+<artifactId>google-cloud-datastore</artifactId>
+<version>1.66.0</version>
+</dependency>
+<dependency>
+<groupId>com.google.cloud</groupId>
+<artifactId>google-cloud-bigquerydatatransfer</artifactId>
+<version>0.84.0-beta</version>
+</dependency>
+<dependency>
+<groupId>com.google.cloud</groupId>
+<artifactId>google-cloud-bigquery</artifactId>
+<version>1.66.0</version>
+</dependency>
+</dependencies>
+</project>

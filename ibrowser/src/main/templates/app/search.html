@@ -1,0 +1,457 @@
+<script src="/js/date.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+/* ------------ Ajax loading -------------- */
+
+function ajaxLoadingStart(contentId){
+	  $("#"+contentId).css("display","block");
+	}
+	function ajaxLoadingStop(contentId){
+	  $("#"+contentId).css("display","none");
+}
+
+function search(){
+	var code;
+	var title;
+	var codeVal = $('#code').val();
+	var titleVal = $('#title').val();
+	$.ajax({
+		url: '/app/search',
+		type: 'POST',
+		data: JSON.stringify({code: codeVal, title: titleVal}),
+		contentType: 'text/json',
+		beforeSend: function(){
+      	   ajaxLoadingStart('divisional-loading');
+      	 $('#BRANCH').html('');
+      	 $('#BUYING').html('');
+      	 $('#BRANCH').append(emptyMsg);
+      	 $('#BUYING').append(emptyMsg);
+      	 $("#branch_report").prop("selectedIndex",0); 
+      	 $("#buying_merchandising_report").prop("selectedIndex",0); 
+      	 },
+		success: function(data){
+			if(data) {
+				drawTable(data,'DIVISIONAL');
+			 }			 
+		  },
+		 complete: function(){
+             ajaxLoadingStop('divisional-loading');
+           },
+          error: function(){
+          	 ajaxLoadingStop('divisional-loading');
+           }
+	});
+}
+
+
+$(function () {
+	$('#branch_report').change(function() {
+		 var groupCodeVal =  $("#branch_report option:selected").val();
+		 if (groupCodeVal) {
+		 	 postGroupName(groupCodeVal,'BRANCH');
+		 } else {
+			$('#BRANCH').html('');
+			$('#BRANCH').append(emptyMsg);
+		 }
+      }); 
+	
+	$('#buying_merchandising_report').change(function() {
+		 var groupCodeVal =  $("#buying_merchandising_report option:selected").val();
+		 if (groupCodeVal) {
+		     postGroupName(groupCodeVal,'BUYING');
+		 } else {
+			 $('#BUYING').html('');
+			 $('#BUYING').append(emptyMsg);
+		 }
+     }); 
+});	
+
+function postGroupName(groupCodeVal,reportTypeVal) {
+	var codeVal = $('#code').val();
+	var titleVal = $('#title').val();
+	$.ajax({
+    	url: '/app/search',
+        type: 'POST',
+        data: JSON.stringify({groupCode: groupCodeVal,reportType:reportTypeVal,code: codeVal, title: titleVal}),
+        contentType: 'text/json',
+        beforeSend: function(){
+        	  if('BRANCH'==reportTypeVal){
+        	    ajaxLoadingStart('branch_loading');
+        	  }else{
+        		ajaxLoadingStart('buying_loading'); 
+        	  }
+          },
+         success: function(data){
+        	drawTable(data, reportTypeVal);
+         },
+         complete: function(){
+        	if('BRANCH'==reportTypeVal){
+                 ajaxLoadingStop('branch_loading');
+           	}else{
+           	  ajaxLoadingStop('buying_loading');	
+           	}
+         },
+         error: function(){
+        	 ajaxLoadingStop('branch_loading');
+        	 ajaxLoadingStop('buying_loading');	
+         }
+    });   
+}
+
+function drawTable(data, container){
+	 $('#'+container).html('');
+	 if(data && data.length > 0){
+	  $.each(data, function(index, item) {
+		var row = 	'<tr>'
+			        +'<td><a href="/app/view-report/'+ item.keyAsString +'?group_code=' + item.groupCode + ' " class="btn btn-link btn-xs report-title" target="_blank">' +item.title + '</a></td>'
+		            +'<td>' + item.code + '</td>'
+		            +'<td><a href="/app/view-report/'+ item.keyAsString +'?group_code=' + item.groupCode + ' " class="btn btn-link btn-xs report-title" target="_blank">' +item.lastReportDateAsString + '</a></td>'
+		            +'<td>' + item.headingAsString + '</td>'
+		            +'<td>' + item.typeAsString + '</td>'
+		            +'<td>' + '<a id="datePopupLink" href="#" onclick="showDatesPopup(\''+item.code+'\', \'' + item.groupCode + '\')">History</a></td>'
+					'</tr>';
+		$('#'+container).append(row);
+	 });
+	} else{
+		$('#'+container).append(emptyMsg);		 
+	 }
+}
+
+function showDatesPopup(reportKey, groupCode) {
+	var message=document.getElementById("message");
+	while(message.hasChildNodes())
+	message.removeChild(message.childNodes[0]);
+	
+	$.ajax({
+	 url: '/app/reportDates',
+	 type: 'POST',
+	 data: JSON.stringify({code: reportKey, groupCode: groupCode, url: 'simple'}),
+	  contentType: 'text/json',
+	  success: function(data) {
+	  addLinks(data, message, reportKey);
+	   }
+	});
+	
+	$('#reportDatePopup').css('display','block');
+	 var morelinkdiv = document.getElementById("morelinkdiv");
+	 var morelink = document.getElementById("morelink");
+	 if (morelink == null) {
+    	var dlink = document.createElement('a');
+	  dlink.href = '#';
+	  dlink.id = 'morelink';
+	  dlink.innerHTML = 'More...';
+	  dlink.onclick = function() {
+	  showAllReportDatesPopup(reportKey, groupCode);
+	 }
+	morelinkdiv.appendChild(dlink);
+	} else {
+	  morelink.onclick = function() {
+	  showAllReportDatesPopup(reportKey, groupCode);
+	 } 
+	}
+}
+
+
+function addLinks(data, message, reportKey) {
+	$('#message').html('');
+	
+	// today daily instances 
+	if (data.frequency == 'DAILY' && data.today) {
+		var todayDaily = data.today;
+		$('#message').append('<a href="/app/reportview/' + todayDaily.key.id+'" target="_blank">Today</a><br/>');
+	}
+	
+	if (data.frequency == 'WEEKLY' && data.lastWeek) {
+		var lastWeek = data.lastWeek;
+		$('#message').append('<a href="/app/reportview/' + lastWeek.key.id+'" target="_blank">Last week</a><br/>');
+	}
+	
+	$.each(data.histories, function(index, item) {
+		var date = Date.parse(item.date);
+		$('#message').append('<a href="/app/reportview/' + item.key.id+'" target="_blank">' + date.toString("dd/MM/yyyy") + '</a><br/>');	
+	});
+	
+	//if there is Last trading period instance then it will be appear in the history
+	if(data.frequency == 'WEEKLY'){
+	 
+		
+	if (data.lastTradingPeriod) {
+		var lastTradingPeriod = data.lastTradingPeriod;
+		var date = Date.parse(lastTradingPeriod.date);
+		$('#message').append('<br/><a href="/app/reportview/' + lastTradingPeriod.key.id+'" target="_blank">Last trading period</a><br/>');	
+	}
+	
+	//if there is Last half instance then it will be appear in the history
+	if (data.lastHalf) {
+		var lastHalf = data.lastHalf;
+		var date = Date.parse(lastHalf.date);
+		$('#message').append('<br/><a href="/app/reportview/' + lastHalf.key.id+'" target="_blank" >Last half</a><br/>');	
+	}
+
+	//if there is Last year instance then it will be appear in the history
+	if (data.lastYear) {
+		var lastYear = data.lastYear;
+		var date = Date.parse(lastYear.date);
+		
+		//TODO update report url with correct value
+		$('#message').append('<br/><a href="/app/reportview/' + lastYear.key.id+'" target="_blank" >Last year</a><br/>');	
+	 }
+   }
+}
+
+function hideDatesPopup() {
+	$('#reportDatePopup').css('display','none');
+	var message=document.getElementById("message");
+	while(message.hasChildNodes())     
+		message.removeChild(message.childNodes[0]);
+}
+
+function showAllReportDatesPopup(reportKey, groupCode) {
+	$('#allReportDatesPopup').css('display','block');
+	var weeklyReports=document.getElementById("weeklyReports");
+	var periodicalReports=document.getElementById("periodicalReports");
+	
+	$("#weeklyReports").html('');
+	$("#periodicalReports").html('')
+	
+	$.ajax({
+		url: '/app/reportDates',
+		type: 'POST',
+		data: JSON.stringify({code: reportKey, groupCode: groupCode, url: 'full'}),
+		contentType: 'text/json',
+		success: function(data) {
+			if (data.frequency == 'DAILY') {
+				$("#weeklyReports").append('<h4>All Reports:</h4>')
+				if(data.frequency == 'DAILY' && data.today){
+					var today = data.today;
+					$('#weeklyReports').append('<a href="/app/reportview/' + today.key.id+'" target="_blank">Today</a><br/>');
+				}
+			} else {
+				$("#weeklyReports").append('<h4>All Reports:</h4>')			
+				if (data.lastWeek) {
+					var lastWeek = data.lastWeek;
+					$('#weeklyReports').append('<a href="/app/reportview/' + lastWeek.key.id+'" target="_blank" >Last week</a><br/>');
+				}
+			}
+			$.each(data.histories, function(index, item) {
+				var date = Date.parse(item.date);
+				$('#weeklyReports').append('<a href="/app/reportview/' + item.key.id+'" target="_blank">' + date.toString("dd/MM/yyyy") + '</a><br/>');	
+			});
+			
+		    if(data.frequency == 'WEEKLY'){
+			
+		    $('#periodicalReports').css('display','block');
+		    $('#weeklyReports').css('width','160px');
+			
+			$("#periodicalReports").append('<br/><h5 style="text-align:left;">Trading period reports:</h5>')
+			$.each(data.tradingPeriods, function(index, item) {
+				var date = Date.parse(item.date);
+				$('#periodicalReports').append('<a href="/app/reportview/' + item.key.id+'" target="_blank">End of trading period, ' + date.toString("dd/MM/yyyy") + '</a><br/>');	
+			});
+			
+			$("#periodicalReports").append('<br/><h5 style="text-align:left;">Half year reports:</h5>')
+			$.each(data.halfs, function(index, item) {
+				var date = Date.parse(item.date);
+				$('#periodicalReports').append('<a href="/app/reportview/' + item.key.id+'" target="_blank">End of half, ' + date.toString("dd/MM/yyyy") + '</a><br/>');	
+			});
+
+			$("#periodicalReports").append('<br/><h5 style="text-align:left;">Year end reports:</h5>')
+			$.each(data.years, function(index, item) {
+				var date = Date.parse(item.date);
+				$('#periodicalReports').append('<a href="/app/reportview/' + item.key.id+'" target="_blank">End of year, ' + date.toString("dd/MM/yyyy") + '</a><br/>');	
+			});
+		  } else {
+			  $('#periodicalReports').css('display','none');
+			  $('#weeklyReports').css('width','315px');
+			  
+		  }
+		}    
+	});
+	hideDatesPopup();
+}
+
+function hideAllReportDatesPopup() {
+	$('#allReportDatesPopup').css('display','none');
+	var weeklyReports=document.getElementById("weeklyReports");
+	while(weeklyReports.hasChildNodes())     
+		weeklyReports.removeChild(weeklyReports.childNodes[0]);
+	var periodicalReports=document.getElementById("periodicalReports");
+	while(periodicalReports.hasChildNodes())     
+		periodicalReports.removeChild(periodicalReports.childNodes[0]);
+}
+
+
+ var emptyMsg = '<tr>'
+                     +'<td colspan="6">'
+                     +'<h3 class="text-muted" style="margin-left: .5em;"><i class="icon-arrow-left"></i> No results... </h3>'
+                     +'</td>'
+                     +'</tr>';
+                     
+                     
+</script>
+<!-- POPUP -->
+<div id="reportDatePopup" class="datesPopup">
+	<div style="margin: 0 5px 0 0; float: right; cursor: pointer" onclick="hideDatesPopup()">
+		<b>x</b>
+	</div>
+	<div id="message" style="margin: 20px"></div>
+	<div id="morelinkdiv" style="padding: 20px">
+		
+	</div>
+</div>
+
+<div id="allReportDatesPopup" class="datesPopup" style="height: initial; min-height: 322px; min-width: 370px;">
+	<div style="margin: 0 5px 0 0; float: right; cursor: pointer" onclick="hideAllReportDatesPopup()">
+		<b>x</b>
+	</div>
+	<table cellpadding="15px">
+		<tr>
+			<td style="vertical-align: top; padding: 10px;">
+				<div id="weeklyReports" class="periodicalReports" style="min-width: 135px"></div>
+			</td>
+			<td style="vertical-align: top; padding: 10px;">
+				<div id="periodicalReports" class="periodicalReports" style="left: 170px; min-width: 180px"></div>
+			</td>
+		</tr>
+	</table>
+</div>
+
+<!-- SEARCH FROM -->
+
+<p class="page-title">Search For Reports</p>
+<!-- Search Form --> 
+ <div style="width: 530px;margin:auto;padding-top: 15px;padding-bottom:50px;">  
+   <div class="form-group">
+    <label for="code" class="col-sm-3 control-label">Code</label>
+    <div class="col-sm-9">
+       <input type="text" value="" id="code" name="code" class="form-control">
+     </div>
+  </div>
+  <br><br>
+  <div class="form-group">
+    <label for="title" class="col-sm-3 control-label">Title</label>
+    <div class="col-sm-9">
+       <input type="text" id="title" value=""  name="title" class="form-control">
+     </div>     
+  </div>
+  <br><br>   
+   <button onclick="search();" id="searchBtn" style="margin-left:300px" class="btn btn-default">Search</button> 
+   <div id="divisional-loading" style="display:none;position: absolute;right: 476px;padding-top:5px;">
+	  <img src='/images/ajax-loading.gif'/>
+	</div>
+</div>
+
+ <!-- Divisional Reports Table -->
+<div id="divisional_report_table"> 
+ <p class="page-title">Divisional Reports</p> 
+<table width="100%" class="report_table table table-hover">
+	<thead>
+		<tr>
+			<th style="width:35%">Report Name</th>
+			<th style="width:15%">Code</th>
+			<th style="width:10%">Date</th>
+			<th style="width:15%">Heading</th>
+			<th style="width:15%">Type</th>
+			<th style="width:10%">History</th>
+		</tr>
+	</thead>
+	<tbody id="DIVISIONAL">
+		<tr>
+		 <td colspan="6">
+			<h3 class="text-muted" style="margin-left: .5em;"><i class="icon-arrow-left"></i> No results...</h3>
+		 </td>
+	    </tr>
+	</tbody>
+ </table>
+</div>
+<!-- DIVISIONAL TABLE END -->
+
+
+<!-- BRANCH TABLE-->
+#set($branchGroups = $request.getAttribute('branchGroups'))
+#set($userBranch = $request.getAttribute('userBranch'))
+#set($branchReport = $request.getAttribute('branchReport'))
+
+<div class="table_holder">
+  	<h3>Branch Reports #if ($userBranch) $userBranch.getName() #end</h3>
+  
+	<div id="branch_loading" style="display:none;position: absolute;right: 255px;">
+	  <img src='/images/ajax-loading.gif'/>
+	</div>
+ 	#if (!$userBranch)
+	   <select id="branch_report" style="width:250px;">
+	       <option value="">Please select a branch</option>
+		    #if ($!branchGroups && $!branchGroups.size() > 0)
+		       #foreach($branchGroup in $!branchGroups)
+		        <option value="$!branchGroup.getKey()">$branchGroup.getName()</option>
+		       #end
+		   #end   
+	   </select>
+	#end
+   <div class="clear"></div>
+ </div>
+
+<div id="branch_report_table"> 
+ <table width="100%" class="report_table table table-hover">
+	<thead>
+		<tr>
+			<th style="width:35%">Report Name</th>
+			<th style="width:15%">Code</th>
+			<th style="width:10%">Date</th>
+			<th style="width:15%">Heading</th>
+			<th style="width:15%">Type</th>
+			<th style="width:10%">History</th>
+		</tr>
+	</thead>
+	<tbody id="BRANCH">
+		<tr>
+		 <td colspan="6">
+			<h3 class="text-muted" style="margin-left: .5em;"><i class="icon-arrow-left"></i> No results...</h3>
+		 </td>
+	    </tr>
+	</tbody>
+  </table>
+</div>
+
+<!-- BUYING OFFICE TABLE -->
+
+#set($buyingGroups = $request.getAttribute('buyingGroups')) 
+
+<div class="table_holder">
+   <h3>Buying Office Reports</h3>
+<div id="buying_loading" style="display:none;position: absolute;right: 255px;">
+    <img src='/images/ajax-loading.gif'/>
+</div>
+   <select id="buying_merchandising_report" style="width:250px;">
+		<option value="">Please select a buying office</option>
+		#if ($!buyingGroups && $!buyingGroups.size() > 0)
+		    #foreach($buyingGroup in $!buyingGroups)
+		     <option value="$!buyingGroup.getKey()">$buyingGroup.getName()</option>
+		    #end
+		  #end   
+	</select>
+    <div class="clear"></div>
+</div>
+
+<table id="buying_report_table"  width="100%" class="report_table table table-hover">
+	<thead>
+		<tr>
+			<th style="width:35%">Report Name</th>
+			<th style="width:15%">Code</th>
+			<th style="width:10%">Date</th>
+			<th style="width:15%">Heading</th>
+			<th style="width:15%">Type</th>
+			<th style="width:10%">History</th>
+		</tr>
+	</thead>
+	<tbody id="BUYING">
+			<tr>
+			 <td colspan="6">
+			  <h3 class="text-muted" style="margin-left: .5em;"><i class="icon-arrow-left"></i> No results...</h3>
+		     </td>
+		   </tr>	   
+	</tbody>
+</table>
+
+
+

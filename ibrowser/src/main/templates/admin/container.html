@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>John Lewis - iBrowser</title>
+#include("head.html")
+</head>
+<script type="text/javascript">
+  
+$(function(){
+	  $.ajax({
+		 url: '/admin/user',
+		 type: 'GET',
+		 contentType: 'text/json',
+		 success: function(user) {
+			$('#username').append(user.email);
+			if(user.userBranch!='HEAD_OFFICE_USER'){
+				 $('#user-branch').append(user.userBranch);
+			}
+		  }
+		});
+ });
+ 
+ </script>
+<body>
+<div class="header-background no-print">
+   <div class="container">
+    <div class="main-header">
+    <div class="row-fluid">
+			<div id="logo">
+			<div class="app-image"><a href="/app"><img src="https://johnlewis-comms.appspot.com/resources/img/logo-white.png"></a></div>
+			<div class="app-name">iBrowser</div>
+			</div>
+			
+			  <div id="partner_details">
+				<span id="username" style="float:left"> </span>
+				<font id="bracn-font" color="#fff">&nbsp;::</font>
+				<span id="user-branch"></span>
+				<font color="#6B8E23">&nbsp;&nbsp;|&nbsp;&nbsp;</font>
+				<a href="/app" style="color:#B1D2AB">Home</a>
+				<font color="#6B8E23">&nbsp;&nbsp;|&nbsp;&nbsp;</font>
+				<a href="/logout" style="color:#B1D2AB">Log out</a>
+			   </div>
+			</div>
+		</div>	
+  </div>
+</div>
+<div class="title no-print">
+	<div class="container">
+		Welcome to iBrowser
+	</div>
+</div>
+
+<div class="container">
+
+	<div id="side_nav">
+		<ul id="favourite_reports">
+			<li class="side_nav_title">Administration</li>
+			<li><a href="/admin/heading">Report Heading</a></li>
+			<li><a href="/admin/type">Report Type</a></li>
+			<li><a href="/admin/report">Reports</a></li>
+			<li><a href="/admin/tradingYear">Trading Year</a></li>
+			<li><a href="/admin/news">Message of the day</a></li>
+		</ul>
+	</div><!--side_nav-->
+	
+	<div id="content_holder">
+	
+		<!-- There will be replacement page content -->
+		#parse($request.getAttribute("content_holder"))
+		
+	</div><!--content_holder-->
+
+</div><!--container-->
+
+<div id="popup">
+	<iframe style="width:1000px; height:540px;" id="popup_frame"></iframe>
+
+	<div class="pull-right" style="overflow:hidden;">
+		<button id="popup_save" onclick="save();" class="btn btn-primary">Save</button>
+		<button class="btn btn-primary" onclick="closePopup();">Close</button>
+		&nbsp;&nbsp;
+	</div>
+</div>
+</body>
+
+</html>

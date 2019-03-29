@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>John Lewis - iBrowser</title>
+#include("head.html")
+
+<script type="text/javascript">
+
+$(function () {
+	 
+	$('#name').change(function() {
+		if($('#name').val()){
+	    	$('#form-heading').removeClass().addClass('form-group');		
+		}else{
+			$('#form-heading').removeClass().addClass('form-group has-error');
+		}
+     });	
+});
+
+<!--  Submit Form --> 
+$(function(){
+	window.submitForm = function () {
+		$('#form-heading').removeClass().addClass('form-group');		
+		if($('#name').val()){
+		   $('#form').submit();	
+		}else{
+		   $('#form-heading').removeClass().addClass('form-group has-error');
+		}
+	}
+});
+
+</script>
+</head>
+<body>
+#set($heading = $request.getAttribute('heading'))
+
+<div style="width: 530px;margin:auto;padding-top: 15px;">
+<form class="form-horizontal" role="form" action="/admin/heading/$!heading.getKeyAsString()/action" method="post" id="form">
+ <input id="key" type="hidden" name="key" value="$!heading.getKeyAsString()">
+   <div class="form-group" id="form-heading">
+    <label for="name" class="col-sm-3 control-label">Name<font color="red">*</font>:</label>
+    <div class="col-sm-9">      
+      <input type="text" value="$!heading.getName()"  name="name" class="form-control" id="name"/>
+    </div>
+  </div>
+</form>
+</div>
+</body>
+</html>

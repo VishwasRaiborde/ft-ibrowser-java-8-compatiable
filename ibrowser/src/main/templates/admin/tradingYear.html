@@ -1,0 +1,127 @@
+<script type="text/javascript">
+<!--  
+
+ var sortField = '';
+ var order;
+ $(function(){
+		$("#report_table th").click(function() {
+		  var header =  $(this).html();
+		  var headerClass = $(this)[0].className;	
+	      if("Action"!=header && ""!=header) {
+		      
+	        if("Trading Year"==header){
+	        	sortField = "tradingYear";
+	        }else if("Number Of Week"==header){
+	        	sortField = "numberOfWeek" ;
+	        }else if("Start Date"==header){
+	        	sortField = "startDate";
+	        }
+	        if("header"==headerClass){
+	    		$(this).removeClass().addClass('header headerSortUp');
+				order = "DESC"; 
+	    	}else if("header headerSortDown"==headerClass){
+	    		 order = "DESC"; 
+	    		 $(this).removeClass().addClass('header headerSortUp');
+	    	}else {
+	    		order = "ASC"; 
+	    		 $(this).removeClass().addClass('header headerSortDown');
+	    	}
+			
+			loadTable();
+	      }	
+		});
+	});
+
+var key = '';
+function deleteTradingYear(key, name) {
+	bootbox.confirm("Are you sure want to delete Trading Year " + name + "?", function(result) {
+        if (result) {
+            $.ajax({
+                url: '/admin/delete',
+                type: 'POST',
+                data: JSON.stringify({key: key,entity:'TradingYear'}),
+                contentType: 'text/json',
+                success: function(data){
+                	loadTable();
+                }
+            });
+        }
+    });
+}
+
+function loadTable() {
+	$.ajax({
+		url: '/admin/tradingYear',
+		type: 'POST',
+		contentType: 'text/json',
+		data: JSON.stringify({sortField: sortField, order : order, step : step}),
+		success: function(data) {
+			$('#tbody').html('');
+			if (data.length > 0) {
+				$.each(data, function(index, item) {
+					var row = 	'<tr><td>' + item.tradingYear + '</td>'
+								+ '<td>' + item.numberOfWeek + '</td>'
+								+ '<td>' +  getStartDate(item.startDate) + '</td>'
+								+'<td><div class="btn-group pull-right">'
+								+'<a href="#" class="btn btn-link btn-xs" onclick="popup(\'/admin/tradingYear/' + item.keyAsString +'/action' + '\', true); return false"><span class="text-muted">Edit</span></a>'
+								+'<a href="#" class="btn btn-link btn-xs" onclick="deleteTradingYear(\'' + item.keyAsString + '\', \'' + item.tradingYear + '\'); return false"><span class="text-muted">Delete</span></a>'
+								+'</div></td></tr>';
+					$('#tbody').append(row);
+				});
+			} else {
+				$('#tbody').append('<tr><td colspan="5"><h3 class="text-muted" style="margin-left: .5em;">No results...</h3></td></tr>');
+			}
+		}
+	});
+}
+
+//-->
+</script>
+#set($tradingYears = $request.getAttribute('tradingYears'))
+<!-- Header component. Sits on top of table -->
+<h3>Trading Years</h3>
+<div class="table_holder">
+    <!-- New folder and upload buttons -->
+    <div class="btn-toolbar pull-right" style="margin-top:3px; margin-right:1em; margin-bottom:3px;">
+        <div class="btn-group">
+             <button class="btn btn-default" onclick="popup('/admin/tradingYear//action', true); return false">New Trading Year</button>
+        </div>
+    </div>
+    <div class="clear"></div>
+</div>
+   <table id="report_table"  width="100%" class="report_table table table-hover">
+	<thead>
+	  <tr>
+	      <th class="header" style="width:30%">Trading Year</th>
+	      <th class="header" style="width:25%">Number Of Week</th>
+	      <th class="header" style="width:20%">Start Date</th>
+	      <th style="width:12%" colspan="2">Action</th>
+     </tr>
+ 	</thead>
+	<tbody id="tbody">
+	#if ($!tradingYears && $!tradingYears.size() > 0)
+		#foreach($trading in $!tradingYears)
+			<tr>
+				<td>$!trading.getTradingYear()</td>
+				<td>$!trading.getNumberOfWeek()</td>
+				<td>$!trading.getDateAsString()</td>
+				<td>
+					<div class="btn-group pull-right">
+				 	  <a href="#" class="btn btn-link btn-xs" onclick="popup('/admin/tradingYear/$!trading.getKeyAsString()/action',true); return false"><span class="text-muted">Edit</span></a>  
+					  <a href="#" class="btn btn-link btn-xs" onclick="deleteTradingYear('$!trading.getKeyAsString()', '$!trading.getTradingYear()'); return false"><span class="text-muted">Delete</span></a>
+					</div>
+				</td>
+			</tr>
+		#end
+	#else
+	<tr>
+		<td colspan="5">
+			<h3 class="text-muted" style="margin-left: .5em;"><i class="icon-arrow-left"></i> No results...</h3>
+		</td>
+	</tr>
+	#end
+	
+	</tbody>
+</table>
+#set($items = $tradingYears) 
+#parse("/admin/pager.html")

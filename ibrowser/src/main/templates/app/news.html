@@ -1,0 +1,12 @@
+#set($news = $request.getAttribute('news'))
+
+<div class="home_container center">
+	   
+       <div class="news">
+       
+        <p style="text-align:center;font-size:22px">$!news.getTitle()</p>
+        <i style="text-align:left"> #if($!news.getDateAsString()) Date: $news.getDateAsString() #end </i>
+         $!news.getDescription()
+       </div><!--box-->
+       
+   </div><!--home_container center-->

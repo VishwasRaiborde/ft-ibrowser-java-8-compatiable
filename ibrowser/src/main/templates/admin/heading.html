@@ -1,0 +1,135 @@
+<script type="text/javascript">
+<!--
+var ids = [];
+
+function deleteHeading(key, name) {
+	bootbox.confirm("Are you sure want to delete '" + name + "'?", function(result) {
+		if (result) {
+			$.ajax({
+				url: '/admin/delete',
+				type: 'POST',
+				data: JSON.stringify({key: key,entity:'Heading'}),
+				contentType: 'text/json',
+				success: function(data){
+					if (data == "null") {
+						loadTable();
+					} else {
+						bootbox.alert("Please select a heading to move reports in current heading: <br>" + data, function() {
+							
+						});
+					}
+				}
+			});
+		}
+	});
+}
+
+function loadTable() {
+	$.ajax({
+		url: '/admin/heading',
+		type: 'POST',
+		contentType: 'text/json',
+		success: function(data) {
+			$('#tbody').html('');
+			if (data.length > 0) {
+				$.each(data, function(index, item) {
+					var row = 	'<tr style="cursor:move;" id='+item.order+'>'
+					            +'<td class="dragHandle"></td>'
+					            +'<td>' + item.name + '</td>'
+								+'<td><div class="btn-group pull-right">'
+								+'<a href="#" class="btn btn-link btn-xs" onclick="popup(\'/admin/heading/' + item.keyAsString +'/action' + '\', true); return false"><span class="text-muted">Rename</span></a>'
+								+'<a href="#" class="btn btn-link btn-xs" onclick="deleteHeading(\'' + item.keyAsString + '\', \'' + item.name + '\'); return false"><span class="text-muted">Delete</span></a>'
+								+'</div></td></tr>';
+					$('#tbody').append(row);
+				});
+				
+				onDragableTable();
+			} else {
+				$('#tbody').append('<tr><td colspan="4"><h3 class="text-muted" style="margin-left: .5em;">No results...</h3></td></tr>');
+			}
+		}
+	});
+}
+function updateHeadingOrders() {
+	$.ajax({
+		url: '/admin/heading//action',
+		type: 'POST',
+		contentType: 'text/json',
+		data: JSON.stringify({ids: ids}),
+		success: function(data) {
+			ids = [];
+			loadTable();
+		}
+	});
+}
+
+function onDragableTable() {
+	$('#report_table').tableDnD({
+		onDrop: function(table, row){
+			 $.tableDnD.serialize();
+			 var rows = table.tBodies[0].rows;
+			  for (var i=0; i<rows.length; i++) {
+			       var id = rows[i].id;
+			       ids.push(id);
+			   }
+			  dragHandle: ".dragHandle";
+			   updateHeadingOrders();   
+		 }
+	  });
+	$("#report_table tr").hover(function() {
+	      $(this.cells[0]).addClass('showDragHandle');
+	   }, function() {
+	      $(this.cells[0]).removeClass('showDragHandle');
+	   });
+}
+
+$(function(){
+	onDragableTable();  
+});
+
+//-->
+</script>
+#set($headings = $request.getAttribute('headings'))
+<!-- Header component. Sits on top of table -->
+<h3>Headings</h3>
+<div class="table_holder">
+    <!-- New folder and upload buttons -->
+    <div class="btn-toolbar pull-right" style="margin-top:3px; margin-right:1em; margin-bottom:3px;">
+        <div class="btn-group">
+             <button class="btn btn-default"  onclick="popup('/admin/heading//action', true); return false">New Heading</button>
+        </div>
+    </div>
+    <div class="clear"></div>
+</div>
+<table id="report_table"  width="100%" class="report_table table table-hover">
+	<thead>
+	  <tr>
+	     <th></th>
+	     <th style="width:80%">Name</th>
+	     <th style="width:15%;border-right:1px solid #ddd">Action</th>
+	   </tr>
+	</thead>
+	<tbody id="tbody">
+	#if ($!headings && $!headings.size() > 0)
+		#foreach($heading in $!headings)
+			<tr id="$!heading.order">
+				<td class="dragHandle"></td>
+				<td>$!heading.getName()</td>
+				<td>
+					<div class="btn-group pull-right">
+						<a href="#" class="btn btn-link btn-xs" onclick="popup('/admin/heading/$!heading.getKeyAsString()/action',true); return false"><span class="text-muted">Rename</span></a>
+						<a href="#" class="btn btn-link btn-xs" onclick="deleteHeading('$!heading.getKeyAsString()', '$!heading.getName()'); return false"><span class="text-muted">Delete</span></a>
+					</div>
+				</td>
+			</tr>
+		#end
+	#else
+	<tr>
+		<td colspan="4">
+			<h3 class="text-muted" style="margin-left: .5em;"><i class="icon-arrow-left"></i> No results...</h3>
+		</td>
+	</tr>
+	#end
+	
+	</tbody>
+</table>

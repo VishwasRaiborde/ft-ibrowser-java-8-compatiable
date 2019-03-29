@@ -1,0 +1,123 @@
+<script type="text/javascript">
+<!--
+
+var key = '';
+var sortField = '';
+var order;
+$(function(){
+		$("#report_table th").click(function() {
+		  var header =  $(this).html();
+		  var headerClass = $(this)[0].className;	
+	      if("Action"!=header && ""!=header) {
+		      
+	        if("Title"==header){
+	        	sortField = "title";
+	        }else if("Date"==header){
+	        	sortField = "date";
+	        }
+	        if("header"==headerClass){
+	    		$(this).removeClass().addClass('header headerSortUp');
+				order = "DESC"; 
+	    	}else if("header headerSortDown"==headerClass){
+	    		 order = "DESC"; 
+	    		 $(this).removeClass().addClass('header headerSortUp');
+	    	}else {
+	    		order = "ASC"; 
+	    		 $(this).removeClass().addClass('header headerSortDown');
+	    	}
+			loadTable();
+	      
+	      }	
+		});
+	});
+	
+function deleteNews(key, title) {
+	bootbox.confirm("Are you sure want to delete '" + title + "'?", function(result) {
+        if (result) {
+            $.ajax({
+                url: '/admin/delete',
+                type: 'POST',
+                data: JSON.stringify({key: key,entity:'News'}),
+                contentType: 'text/json',
+                success: function(data){
+                	loadTable();
+                }
+            });
+        }
+    });
+}
+
+function loadTable() {
+	$.ajax({
+		url: '/admin/news',
+		type: 'POST',
+		data: JSON.stringify({sortField: sortField, order : order, step : step}),
+		contentType: 'text/json',
+		success: function(data) {
+			$('#tbody').html('');
+			if (data.length > 0) {
+				$.each(data, function(index, item) {
+					var row = 	'<tr><td>' + item.title + '</td>'
+								+ '<td>' + getStartDate(item.date)  + '</td>'
+								+'<td><div class="btn-group pull-right">'
+								+'<a href="#" class="btn btn-link btn-xs" onclick="popup(\'/admin/news/' + item.keyAsString +'/action' + '\', true); return false"><span class="text-muted">Edit</span></a>'
+								+'<a href="#" class="btn btn-link btn-xs" onclick="deleteNews(\'' + item.keyAsString + '\', \'' + item.title + '\'); return false"><span class="text-muted">Delete</span></a>'
+								+'</div></td></tr>';
+					$('#tbody').append(row);
+				});
+			} else {
+				$('#tbody').append('<tr><td colspan="4"><h3 class="text-muted" style="margin-left: .5em;">No results...</h3></td></tr>');
+			}
+		}
+	});
+}
+
+//-->
+</script>
+
+#set($newsList = $request.getAttribute('news'))
+
+<!-- Header component. Sits on top of table -->
+<h3>Message of the day</h3>
+<div class="table_holder">
+    <!-- New folder and upload buttons -->
+    <div class="btn-toolbar pull-right" style="margin-top:3px; margin-right:1em; margin-bottom:3px;">
+        <div class="btn-group">
+             <button class="btn btn-default" onclick="popup('/admin/news//action', true); return false">Add message of the day</button>
+        </div>
+    </div>
+    <div class="clear"></div>
+</div>
+<table id="report_table"  width="100%" class="report_table table table-hover">
+      <thead>
+       <tr>
+	      <th class="header" style="width:60%">Title</th>
+	      <th class="header" style="width:25%">Date</th>
+	      <th style="width:12%" colspan="2">Action</th>
+	   </tr>
+	  </thead>
+     <tbody id="tbody">
+	#if ($!newsList && $!newsList.size() > 0)
+		#foreach($news in $!newsList)
+			<tr>
+				<td>$!news.getTitle()</td>
+				<td>$!news.getDateAsString()</td>
+				<td>
+					<div class="btn-group pull-right">
+						<a href="#" class="btn btn-link btn-xs" onclick="popup('/admin/news/$!news.getKeyAsString()/action',true); return false"><span class="text-muted">Edit</span></a>  
+					    <a href="#" class="btn btn-link btn-xs" onclick="deleteNews('$!news.getKeyAsString()', '$!news.getTitle()'); return false"><span class="text-muted">Delete</span></a>
+					</div>
+				</td>
+			</tr>
+		#end
+	#else
+	<tr>
+		<td colspan="4">
+			<h3 class="text-muted" style="margin-left: .5em;"><i class="icon-arrow-left"></i> No results...</h3>
+		</td>
+	</tr>
+	#end
+	</tbody>	
+</table>
+#set($items = $newsList) 
+#parse("/admin/pager.html")

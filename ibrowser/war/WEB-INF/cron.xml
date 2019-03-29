@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+   <!-- <cron>
+    <url>/fetching-deleted-instances-cron</url>
+    <description>Cron every 10 minutes</description>
+    <schedule>every 10 minutes</schedule>
+  </cron> -->  
+  
+   <cron>
+    <url>/fetching-report-instances-cron</url>
+    <description>Cron every 15 minutes</description>
+    <schedule>every 15 minutes</schedule>
+  </cron> 
+
+  <!-- <cron>
+    <url>/clean-up-instances-cron</url>
+    <description>Cron day</description>
+    <schedule>every day 00:00</schedule>
+  </cron> -->
+ 
+  <!--  <cron>
+    <url>/fetching-google-groups</url>
+    <description>Cron every 15 minutes</description>
+    <schedule>every 15 minutes</schedule>
+  </cron> --> 
+ 
+   <cron>
+    <url>/fetching-google-groups-cron</url>
+    <description>Cron day</description>
+    <schedule>every day 00:00</schedule>
+  </cron> 
+ 
+  
+
+ <cron>
+    <url>/bigquery-audit-logs-cron</url>
+    <description>Cron day</description>
+    <schedule>every day 00:00</schedule>
+  </cron>
+
+
+  <cron>
+    <url>/send-notifications-cron</url>
+    <description>Cron day</description>
+    <schedule>every day 00:00</schedule>
+  </cron>
+
+   
+ </cronentries>

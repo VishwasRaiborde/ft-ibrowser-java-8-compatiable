@@ -1,0 +1,399 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link href="/css/select2.css" rel="stylesheet">
+<script src="//code.jquery.com/jquery-1.9.1.js"></script>
+<title>John Lewis - iBrowser</title>
+#include("head.html")
+
+<script type="text/javascript">
+
+var reportCodePtn = '^[A-Z]{3}[A-Z0-9]{4}[A-Z0-9][DW]' ;
+var isAddForm= false;
+if(document.baseURI.indexOf("report//action")>0){
+	isAddForm = true;
+}
+
+$.getScript('/js/select2.min.js',function(){
+	$("#allowedGroups").select2({
+		allowClear:true
+	});
+	$("#deniedGroups").select2({
+		allowClear:true
+	});
+	$('.single option').click(function() {
+		$(this).siblings().prop('selected', false);
+	});
+});
+
+$(function(){
+	$("#allowedGroups")
+	.on("select2-removed", function(e) {
+		var denied=document.getElementById("deniedGroups");
+		if (!isOptionAlreadyExist(denied, e.val)) {
+			var selectBoxOption = document.createElement("option");
+			selectBoxOption.value = e.val;
+			selectBoxOption.text = e.choice.text;
+			denied.add(selectBoxOption, null); 
+		}
+	})
+	
+	$("#deniedGroups")
+	.on("select2-removed", function(e) {
+		var allowed=document.getElementById("allowedGroups");
+		if (!isOptionAlreadyExist(allowed, e.val)) {
+			var selectBoxOption = document.createElement("option");
+			selectBoxOption.value = e.val;
+			selectBoxOption.text = e.choice.text;
+			allowed.add(selectBoxOption, null); 
+		}
+	})
+});
+
+function isOptionAlreadyExist(listBox,value){
+	var exists=false;
+	for(var x=0;x<listBox.options.length;x++){
+		if(listBox.options[x].value==value || listBox.options[x].text==value){ 
+			exists=true;
+			break;
+		}
+	}
+	return exists;
+}
+
+
+$(function(){
+    <!-- report code validation -->	
+	$('#reportCode').change(function() {
+		var keyVal =  $('#key').val();
+		var codeVal =  $('#reportCode').val();
+		var validationCode;
+		var errors = "";
+		var hasErrors = false;
+		 $.ajax({
+			 url: '/admin/reportValidation',
+			 type: 'POST',
+			 data: JSON.stringify({key: keyVal, code: codeVal}),
+			 contentType: 'text/json',
+			 success: function(data) {
+				 validationCode = data;
+				 if(!validationCode){
+					 errors = "This report code is already exist<br>";
+					 bootbox.alert(errors, function() {
+						 $('#form-group-code').removeClass().addClass('form-group has-error');	
+					 }); 
+				 }
+				 
+			  }
+	     });  
+		
+		 if(!codeVal || !codeVal.match(reportCodePtn)) {
+			errors =  "Report code should be match [A-Z]{3}[A-Z0-9]{4}[A-Z0-9][DW] pattern <br>";
+			hasErrors = true;
+		 }
+		 
+		 if(hasErrors){
+			 bootbox.alert(errors, function() {
+				 $('#form-group-code').removeClass().addClass('form-group has-error');	
+			 }); 
+		 }
+		  else{
+			$('#form-group-code').removeClass().addClass('form-group');
+			var allowed=document.getElementById("allowedGroups");
+			for (var i = 0; i < allowed.options.length; i++) {
+				if(allowed.options[i].text == 'iBrowser-' + reportCode){
+					$("#allowedGroups").select2("data", [{id: allowed.options[i].value, text: allowed.options[i].text}]);
+					break;
+				}
+			}
+		}
+	});
+	  
+	  <!-- report title validation -->	
+	  $('#title').change(function() {
+	     if($('#title').val()){
+	    	 $('#form-group-title').removeClass().addClass('form-group');	 
+	     }else{
+	    	 $('#form-group-title').removeClass().addClass('form-group has-error'); 
+	     }
+	  });
+	  <!-- report type validation -->
+	  $('#reportType').change(function() {
+		    if ('PLEASE_SELECT'==$(this).find(':selected').val()) {
+	        	 $('#form-group-type').removeClass().addClass('form-group has-error');
+	           }else{
+	        	   $('#form-group-type').removeClass().addClass('form-group'); 
+	           }
+	   });				
+	  <!-- report heading validation -->
+	  $('#heading').change(function() {
+		    if ('PLEASE_SELECT'==$(this).find(':selected').val()) {
+	        	 $('#form-group-heading').removeClass().addClass('form-group has-error');
+	           }else{
+	        	   $('#form-group-heading').removeClass().addClass('form-group'); 
+	           }
+	   });
+	  <!-- report frequency validation -->
+	  if(isAddForm){
+	    $('#frequency').change(function() {
+		    if ('PLEASE_SELECT'==$(this).find(':selected').val()) {
+	        	 $('#form-group-frequency').removeClass().addClass('form-group has-error');
+	           }
+		       else if('DAILY'==$(this).find(':selected').val()){
+		    	   	
+		    	   $('#form-group-frequency').removeClass().addClass('form-group'); 
+		    	   
+		    	   $('#deletionPeriod').empty();
+		    	   $("#deletionPeriod").append('<option value=PLEASE_SELECT>Please select</option>');
+		    	   $("#deletionPeriod").append('<option value=DAY_1>1 day</option>');
+		    	   $("#deletionPeriod").append('<option value=WEEK_1>1 week</option>');
+		    	   $("#deletionPeriod").append('<option value=WEEK_2>2 weeks</option>');
+		    	   $("#deletionPeriod").append('<option value=WEEK_3>3 weeks</option>');
+		    	   $("#deletionPeriod").append('<option value=MONTH_1>1 month</option>');
+		    	   $("#deletionPeriod").append('<option value=MONTH_2>2 months</option>');
+		    	   $("#deletionPeriod").append('<option value=MONTH_3>3 months</option>');
+	           }
+		       else if('WEEKLY'==$(this).find(':selected').val()){
+		    	   $('#deletionPeriod').empty();
+		    	   $("#deletionPeriod").append('<option value=PLEASE_SELECT>Please select</option>');
+		    	   $("#deletionPeriod").append('<option value=MONTH_1>1 month</option>');
+		    	   $("#deletionPeriod").append('<option value=MONTH_2>2 months</option>');
+		    	   $("#deletionPeriod").append('<option value=MONTH_3>3 months</option>');
+		       }
+	     });
+	  } else {
+		  $('#frequency').attr("disabled", true);
+	  }
+	  
+	  <!-- report deletion period validation -->
+	   $('#deletionPeriod').change(function() {
+		    if ('PLEASE_SELECT'==$(this).find(':selected').val()) {
+	        	 $('#form-group-period').removeClass().addClass('form-group has-error');
+	           }
+		    else{
+	        	 $('#form-group-period').removeClass().addClass('form-group'); 
+	           }
+	   });
+	
+	  <!-- report allowed groups validation -->
+	  var allowed=document.getElementById("allowedGroups");
+	   var denied=document.getElementById("deniedGroups");
+		
+		$('#allowedGroups').change(function() {
+		    $('#s2id_allowedGroups').css('border','');
+			$('#form-group-allowed-group').removeClass().addClass('form-group');
+			if(isAddForm){
+			for (var i = 0; i < allowed.options.length; i++) {
+				if(allowed.options[i].selected == true){
+					for (var j = 0; j < denied.options.length; j++) {
+						if(allowed.options[i].value == denied.options[j].value){
+							denied.remove(j);
+							break;
+						}
+					}
+				}
+			}
+		  }
+		});
+		$('#deniedGroups').change(function() {
+			$('#s2id_deniedGroups').css('border','');
+			$('#form-group-denied-group').removeClass().addClass('form-group');
+            if(isAddForm){
+			for (var i = 0; i < denied.options.length; i++) {
+				if(denied.options[i].selected == true){
+					for (var j = 0; j < allowed.options.length; j++) {
+						if(denied.options[i].value == allowed.options[j].value){
+							allowed.remove(j);
+							break;
+						}
+					}
+				}
+			 }
+            }
+		});
+	
+});	 
+	
+<!--  Submit Form --> 
+$(function(){
+	window.submitForm = function () {
+		
+		var hasError = false;
+		var code = $('#reportCode').val();
+		var keyVal = $('#key').val();
+		
+		if(!code.match(reportCodePtn)){
+			hasError=true ;
+				 $('#form-group-code').removeClass().addClass('form-group has-error');	
+		}
+		if(!$('#title').val()){
+			 hasError=true ;
+			 $('#form-group-title').removeClass().addClass('form-group has-error');
+		}
+		if('PLEASE_SELECT'== $('#reportType').val()){
+			 hasError=true ;
+			 $('#form-group-type').removeClass().addClass('form-group has-error');
+		}
+		if('PLEASE_SELECT'== $('#heading').val()){
+			 hasError=true ;
+			 $('#form-group-heading').removeClass().addClass('form-group has-error');
+		}
+		if('PLEASE_SELECT'== $('#frequency').val()){
+			 hasError=true ;
+			 $('#form-group-frequency').removeClass().addClass('form-group has-error');
+		}
+		if('PLEASE_SELECT' == $('#deletionPeriod').val()){
+			 hasError=true ;
+			 $('#form-group-period').removeClass().addClass('form-group has-error');
+		}
+		
+		var allowedData = $("#allowedGroups").select2("val");
+		document.getElementById("allowedGroupsValue").value = allowedData;
+		if(!$('#allowedGroupsValue').val()){
+			hasError=true ;
+			$('#s2id_allowedGroups').css('border','1px solid #b94a48');
+			$('#form-group-allowed-group').removeClass().addClass('form-group has-error');
+		}
+		
+		var deniedData = $("#deniedGroups").select2("val");
+		document.getElementById("deniedGroupsValue").value = deniedData;
+		
+			var allowedGroups = new Array();
+			var denidedGroups = new Array();
+			
+			 $('#s2id_allowedGroups').each(function(){
+		        $(this).find('li div').each(function(){
+		        	allowedGroups.push($(this).text());
+		          });
+		    });
+			 $('#s2id_deniedGroups').each(function(){
+		        $(this).find('li div').each(function(){
+		        	  denidedGroups.push($(this).text());
+			   });
+		    });
+			
+			var sameGroups = new Array();
+			var reportGroup = null;
+			  if(allowedGroups.length>0 && denidedGroups.length>0){
+				     for(var i=0;i<allowedGroups.length; i++){
+					 for(var j=0; j<denidedGroups.length ; j++){
+						if(allowedGroups[i]===denidedGroups[j]){
+							sameGroups.push(allowedGroups[i]+"<br>");
+							hasError=true;
+						}if(denidedGroups[j].indexOf("iBrowser-")==0){
+						 	reportGroup = denidedGroups[j];
+						 	hasError = true;
+						 }
+					} 
+				} 
+				if(sameGroups!=null && reportGroup!=null && hasError){
+					bootbox.alert(sameGroups+" can not be same group and <br>"+ reportGroup+ " should be only allowed group" , function() {
+					}); 
+				}else if(sameGroups!=null && reportGroup==null && hasError){
+					bootbox.alert(sameGroups+" can not be same group" , function() {
+					}); 
+				} 
+			}   
+		
+		if(!hasError){
+			$('#form').submit();
+		}
+	 }
+});
+</script>
+</head>
+
+<body>
+
+#set($report = $request.getAttribute('report'))
+<div style="width: 530px;margin:auto;padding-top: 15px;">
+<form class="form-horizontal" role="form" action="/admin/report/$!report.getKeyAsString()/action" method="post" id="form">
+    <input id="key" type="hidden" name="key" value="$!report.getKeyAsString()">
+	<div class="form-group" id="form-group-code">
+	  <label for="reportCode" class="col-sm-3 control-label">Report code<font color="red">*</font>:</label>
+	  <div class="col-sm-9">
+	    <input type="text" value="$!report.getCode()" name="reportCode" class="form-control" id="reportCode" >
+	  </div>
+	</div>
+	<div class="form-group" id="form-group-title">
+	  <label for="title" class="col-sm-3 control-label">Title<font color="red">*</font>:</label>
+	  <div class="col-sm-9">
+	    <input type="text" value="$!report.getTitle()" name="title" class="form-control" id="title" >
+	  </div>
+	</div>
+	<div class="form-group">
+	  <label for="description" class="col-sm-3 control-label">Description:</label>
+	  <div class="col-sm-9">
+	    <textarea name="description" class="form-control" id="description" rows="3">$!report.getDescription()</textarea>
+	  </div>
+	</div>
+	<div class="form-group" id="form-group-type">
+	  <label for="reportType" class="col-sm-3 control-label">Type<font color="red">*</font>:</label>
+	  <div class="col-sm-9">      
+	    <select class="form-control" name="reportType" id="reportType">
+		<option value="PLEASE_SELECT" >Please select</option>
+	  	#foreach($r in $report.getTypeList())
+	   		<option value="$!r.getCode()" #if($!report.getReportType() == $!r.getCode()) selected #end>$!r.getName()</option>
+       	#end
+       </select>
+	  </div>
+	</div>
+	<div class="form-group" id="form-group-heading">
+		<label for="heading" class="col-sm-3 control-label">Heading<font color="red">*</font>:</label>
+		<div class="col-sm-9">      
+		<select class="form-control" name="heading" id="heading">
+			<option value="PLEASE_SELECT" >Please select</option>
+			#foreach($h in $report.getHeadingList())
+				<option value="$!h.getKeyAsString()" #if($!report.getHeading().getKeyAsString() == $!h.getKeyAsString()) selected #end>$h.getName()</option>
+			#end
+			</select>
+		</div>
+	</div>
+	<div class="form-group" id="form-group-frequency">
+	  <label for="frequency" class="col-sm-3 control-label">Frequency<font color="red">*</font>:</label>
+	  <div class="col-sm-9">      
+	    <select class="form-control" name="frequency" id="frequency">
+	    <option value="PLEASE_SELECT" >Please select</option>
+	  	#foreach($r in $report.getFrequencyList())
+	   		<option value="$!r.getCode()" #if($!report.getFrequency() == $!r.getCode()) selected #end>$r.getName()</option>
+       	#end
+	   </select>
+	  </div>
+	</div>
+	<div class="form-group" id="form-group-period">
+	  <label for="deletionPeriod" class="col-sm-3 control-label">Kept for<font color="red">*</font>:</label>
+	  <div class="col-sm-9">      
+	    <select class="form-control" name="deletionPeriod" id="deletionPeriod">
+		<option value="PLEASE_SELECT" >Please select</option>
+	  	#foreach($d in $report.getDeletionPeriods())
+	   		<option value="$!d.getCode()" #if($!report.getDeletionPeriod().getCode() == $!d.getCode()) selected #end>$d.getName()</option>
+       	#end
+	   </select>
+	  </div>
+	</div>
+	<div class="form-group" id="form-group-allowed-group">
+		<label for="allowedGroups" class="col-sm-3 control-label">Allowed groups:</label>
+		<div class="col-sm-9">
+			<select id="allowedGroups" class="select2" multiple="multiple" style="width:392px;">
+			  	#foreach($d in $report.getGroupList())
+		   			<option value="$!d.getKeyAsString()" #if($!d.getAllowedGroup()) selected #end>$d.getName()</option>
+		       	#end
+			</select>
+			<input type="hidden" id="allowedGroupsValue" name="allowedGroupsValue" value="">
+		</div>
+	</div>
+	<div class="form-group" id="form-group-denied-group">
+		<label for="deniedGroups" class="col-sm-3 control-label">Denied groups:</label>
+		<div class="col-sm-9">
+			<select id="deniedGroups" class="select2" multiple="multiple" style="width:392px;">
+			  	#foreach($d in $report.getGroupList())
+		   			<option value="$!d.getKeyAsString()" #if($!d.getDeniedGroup()) selected #end>$d.getName()</option>
+		       	#end
+			</select>
+			<input type="hidden" id="deniedGroupsValue" name="deniedGroupsValue" value="">
+		</div>
+	</div>
+</form>
+</div>
+</body>
+</html>
