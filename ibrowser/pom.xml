@@ -11,8 +11,34 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 	</properties>
 	<packaging>war</packaging>
+	
+
+	<profiles>
+		<profile>
+			<id>qa</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>install</phase>
+								<goals>
+									<goal>copy-dependencies</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>war/WEB-INF/lib</outputDirectory>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 	<build>
+		<finalName>ibrowser</finalName>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<outputDirectory>war/WEB-INF/classes</outputDirectory>
 		<resources>
@@ -30,6 +56,22 @@
 			</resource>
 		</resources>
 		<plugins>
+
+			<plugin>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>war/WEB-INF/lib</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.7.0</version>
@@ -38,7 +80,7 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
-			
+
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>3.2.1</version>
@@ -46,7 +88,7 @@
 					<warSourceDirectory>war</warSourceDirectory>
 				</configuration>
 			</plugin>
-			
+
 			<!-- <plugin> <groupId>org.datanucleus</groupId> <artifactId>datanucleus-maven-plugin</artifactId> 
 				<version>5.0.2</version> <configuration> <log4jConfiguration>${basedir}/log4j.properties</log4jConfiguration> 
 				<verbose>true</verbose> </configuration> <executions> <execution> <phase>process-classes</phase> 
