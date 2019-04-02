@@ -16,282 +16,284 @@ import com.google.appengine.datanucleus.annotations.Unowned;
 
 @PersistenceCapable
 public class Report extends BaseEntity {
-	
-	@Persistent
-	private String code;
-	
-	@Persistent
-	private String title;
 
-	@Persistent
-	private String description;
-	
-	@Persistent(defaultFetchGroup = "true")
-	@Unowned
-	private Type type;	//for many to one relation with Type entity
-	
-	@Persistent
-	private ReportTypeEnum reportType; //this is for only filter
+  @Persistent
+  private String code;
 
-	@NotPersistent
-	private String typeAsString;
-	
-	@Persistent(defaultFetchGroup = "true")
-	@Unowned
-	private Heading heading;	//for many to one relation with Heading entity
-	
-	@Persistent
-	private FrequencyEnum frequency;
-	
-	@Persistent
-	private DeletionPeriodEnum deletionPeriod;
-	
-	@Persistent(defaultFetchGroup = "true")
-	@Unowned
-	public List<GoogleGroup> allowedGroups;
+  @Persistent
+  private String title;
 
-	@Persistent
-	private List<Key> allowedGroupsKey;
+  @Persistent
+  private String description;
 
-	@Persistent(defaultFetchGroup = "true")
-	@Unowned
-	public List<GoogleGroup> deniedGroups;
+  @Persistent(defaultFetchGroup = "true")
+  @Unowned
+  private Type type; // for many to one relation with Type entity
 
-	@Persistent
-	private List<Key> deniedGroupsKey;
+  @Persistent
+  private ReportTypeEnum reportType; // this is for only filter
 
-	@Persistent
-	private String headingAsString;
-	
-	@Persistent
-	private Boolean hasInstance = false;
-	
-	@NotPersistent
-	private List<FrequencyEnum> frequencyList;
-	
-	@Persistent
-	private String deletionPeriodAsString;
-	
-	@NotPersistent
-	private List<ReportTypeEnum> typeList;
-	
-	@NotPersistent
-	private List<GoogleGroup> groupList;
-	
-	@NotPersistent
-	private List<DeletionPeriodEnum> deletionPeriods;
-	
-	@NotPersistent
-	private List<Heading> headingList;
-	
-	@NotPersistent
-	private String lastReportDateAsString;
-	
-	@NotPersistent
-	private String popupString;
-	
-	@NotPersistent
-	private String groupCode;
-	
-	public String getCode() {
-		return code;
-	}
+  @NotPersistent
+  private String typeAsString;
 
-	public void setCode(String code) {
-		this.code = code;
-	}
+  @Persistent(defaultFetchGroup = "true")
+  @Unowned
+  private Heading heading; // for many to one relation with Heading entity
 
-	public String getTitle() {
-		return title;
-	}
+  @Persistent
+  private FrequencyEnum frequency;
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+  @Persistent
+  private DeletionPeriodEnum deletionPeriod;
 
-	public String getDescription() {
-		return description;
-	}
+  @Persistent(defaultFetchGroup = "true")
+  @Unowned
+  public List<GoogleGroup> allowedGroups;
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+  @Persistent
+  private List<Key> allowedGroupsKey;
 
-	public Type getType() {
-		return type;
-	}
+  @Persistent(defaultFetchGroup = "true")
+  @Unowned
+  public List<GoogleGroup> deniedGroups;
 
-	public void setType(Type type) {
-		this.type = type;
-		this.reportType = type != null ? type.getType() : null;
-	}
+  @Persistent
+  private List<Key> deniedGroupsKey;
 
-	public ReportTypeEnum getReportType() {
-		return reportType;
-	}
+  @Persistent
+  private String headingAsString;
 
-	public void setReportType(ReportTypeEnum reportType) {
-		this.reportType = reportType;
-	}
+  @Persistent
+  private Boolean hasInstance = false;
 
-	public String getTypeAsString() {
-		return typeAsString;
-	}
+  @NotPersistent
+  private List<FrequencyEnum> frequencyList;
 
-	public void setTypeAsString(String typeAsString) {
-		this.typeAsString = typeAsString;
-	}
+  @Persistent
+  private String deletionPeriodAsString;
 
-	public Heading getHeading() {
-		return heading;
-	}
+  @NotPersistent
+  private List<ReportTypeEnum> typeList;
 
-	public void setHeading(Heading heading) {
-		this.heading = heading;
-	}
+  @NotPersistent
+  private List<GoogleGroup> groupList;
 
-	public FrequencyEnum getFrequency() {
-		return frequency;
-	}
+  @NotPersistent
+  private List<DeletionPeriodEnum> deletionPeriods;
 
-	public void setFrequency(FrequencyEnum frequency) {
-		this.frequency = frequency;
-	}
+  @NotPersistent
+  private List<Heading> headingList;
 
-	public DeletionPeriodEnum getDeletionPeriod() {
-		return deletionPeriod;
-	}
+  @NotPersistent
+  private String lastReportDateAsString;
 
-	public void setDeletionPeriod(DeletionPeriodEnum deletionPeriod) {
-		this.deletionPeriod = deletionPeriod;
-	}
+  @NotPersistent
+  private String popupString;
 
-	public List<GoogleGroup> getAllowedGroups() {
-		return allowedGroups;
-	}
+  @NotPersistent
+  private String groupCode;
 
-	public void setAllowedGroups(List<GoogleGroup> allowedGroups) {
-		this.allowedGroups = allowedGroups;
-		
-		if (allowedGroups != null && !allowedGroups.isEmpty()) {
-			ArrayList<Key> keys = new ArrayList<Key>();
-			for (GoogleGroup ag : allowedGroups) {
-				keys.add(ag.getKey());
-			}
-			this.allowedGroupsKey = keys;
-		} else {
-			this.allowedGroupsKey = null;
-		}
-	}
+  public String getCode() {
+    return code;
+  }
 
-	public List<Key> getAllowedGroupsKey() {
-		return allowedGroupsKey;
-	}
+  public void setCode(String code) {
+    this.code = code;
+  }
 
-	public List<GoogleGroup> getDeniedGroups() {
-		return deniedGroups;
-	}
+  public String getTitle() {
+    return title;
+  }
 
-	public void setDeniedGroups(List<GoogleGroup> deniedGroups) {
-		this.deniedGroups = deniedGroups;
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-		if (deniedGroups != null && !deniedGroups.isEmpty()) {
-			ArrayList<Key> keys = new ArrayList<Key>();
-			for (GoogleGroup ag : deniedGroups) {
-				keys.add(ag.getKey());
-			}
-			this.deniedGroupsKey = keys;
-		} else {
-			this.deniedGroupsKey = null;
-		}
-	}
-	
+  public String getDescription() {
+    return description;
+  }
 
-	public List<Key> getDeniedGroupsKey() {
-		return deniedGroupsKey;
-	}
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-	public List<FrequencyEnum> getFrequencyList() {
-		return frequencyList;
-	}
+  public Type getType() {
+    return type;
+  }
 
-	public void setFrequencyList(List<FrequencyEnum> frequencyList) {
-		this.frequencyList = frequencyList;
-	}
+  public void setType(Type type) {
+    this.type = type;
+    this.reportType = type != null ? type.getType() : null;
+  }
 
-	public List<ReportTypeEnum> getTypeList() {
-		return typeList;
-	}
+  public ReportTypeEnum getReportType() {
+    return reportType;
+  }
 
-	public void setTypeList(List<ReportTypeEnum> typeList) {
-		this.typeList = typeList;
-	}
+  public void setReportType(ReportTypeEnum reportType) {
+    this.reportType = reportType;
+  }
 
-	public List<GoogleGroup> getGroupList() {
-		return groupList;
-	}
+  public String getTypeAsString() {
+    return typeAsString;
+  }
 
-	public void setGroupList(List<GoogleGroup> groupList) {
-		this.groupList = groupList;
-	}
+  public void setTypeAsString(String typeAsString) {
+    this.typeAsString = typeAsString;
+  }
 
-	public List<DeletionPeriodEnum> getDeletionPeriods() {
-		return deletionPeriods;
-	}
+  public Heading getHeading() {
+    return heading;
+  }
 
-	public void setDeletionPeriods(List<DeletionPeriodEnum> deletionPeriods) {
-		this.deletionPeriods = deletionPeriods;
-	}
+  public void setHeading(Heading heading) {
+    this.heading = heading;
+  }
 
-	public List<Heading> getHeadingList() {
-		return headingList;
-	}
+  public FrequencyEnum getFrequency() {
+    return frequency;
+  }
 
-	public void setHeadingList(List<Heading> headingList) {
-		this.headingList = headingList;
-	}
-	public String getLastReportDateAsString(){
-		return lastReportDateAsString;
-	}
-	public void setLastReportDateAsString(String lastReportDateAsString){
-		this.lastReportDateAsString = lastReportDateAsString;
-	}
-	
-	/*public String getCreatedDateAsString() {
-		return createdDate != null ? DateUtils.dateFormat1.format(createdDate) : "";
-	}
-	public String getDateToString() {
-		return createdDate != null ? DateUtils.getDateToString(createdDate) : "";
-	}*/
+  public void setFrequency(FrequencyEnum frequency) {
+    this.frequency = frequency;
+  }
 
-	public String getDeletionPeriodAsString() {
-		return deletionPeriodAsString;
-	}
-	public void setDeletionPeriodAsString(String deletionPeriodAsString) {
-		this.deletionPeriodAsString = deletionPeriodAsString;
-	}
+  public DeletionPeriodEnum getDeletionPeriod() {
+    return deletionPeriod;
+  }
 
-	public String getHeadingAsString() {
-		return headingAsString;
-	}
-	public void setHeadingAsString(String headingAsString) {
-		this.headingAsString = headingAsString;
-	}
+  public void setDeletionPeriod(DeletionPeriodEnum deletionPeriod) {
+    this.deletionPeriod = deletionPeriod;
+  }
 
-	public String getPopupString() {
-		return popupString;
-	}
+  public List<GoogleGroup> getAllowedGroups() {
+    return allowedGroups;
+  }
 
-	public void setPopupString(String popupString) {
-		this.popupString = popupString;
-	}
+  public void setAllowedGroups(List<GoogleGroup> allowedGroups) {
+    this.allowedGroups = allowedGroups;
 
-	public String getGroupCode() {
-		return groupCode;
-	}
+    if (allowedGroups != null && !allowedGroups.isEmpty()) {
+      ArrayList<Key> keys = new ArrayList<Key>();
+      for (GoogleGroup ag : allowedGroups) {
+        keys.add(ag.getKey());
+      }
+      this.allowedGroupsKey = keys;
+    } else {
+      this.allowedGroupsKey = null;
+    }
+  }
 
-	public void setGroupCode(String groupCode) {
-		this.groupCode = groupCode;
-	}
-  	
+  public List<Key> getAllowedGroupsKey() {
+    return allowedGroupsKey;
+  }
+
+  public List<GoogleGroup> getDeniedGroups() {
+    return deniedGroups;
+  }
+
+  public void setDeniedGroups(List<GoogleGroup> deniedGroups) {
+    this.deniedGroups = deniedGroups;
+
+    if (deniedGroups != null && !deniedGroups.isEmpty()) {
+      ArrayList<Key> keys = new ArrayList<Key>();
+      for (GoogleGroup ag : deniedGroups) {
+        keys.add(ag.getKey());
+      }
+      this.deniedGroupsKey = keys;
+    } else {
+      this.deniedGroupsKey = null;
+    }
+  }
+
+  public List<Key> getDeniedGroupsKey() {
+    return deniedGroupsKey;
+  }
+
+  public List<FrequencyEnum> getFrequencyList() {
+    return frequencyList;
+  }
+
+  public void setFrequencyList(List<FrequencyEnum> frequencyList) {
+    this.frequencyList = frequencyList;
+  }
+
+  public List<ReportTypeEnum> getTypeList() {
+    return typeList;
+  }
+
+  public void setTypeList(List<ReportTypeEnum> typeList) {
+    this.typeList = typeList;
+  }
+
+  public List<GoogleGroup> getGroupList() {
+    return groupList;
+  }
+
+  public void setGroupList(List<GoogleGroup> groupList) {
+    this.groupList = groupList;
+  }
+
+  public List<DeletionPeriodEnum> getDeletionPeriods() {
+    return deletionPeriods;
+  }
+
+  public void setDeletionPeriods(List<DeletionPeriodEnum> deletionPeriods) {
+    this.deletionPeriods = deletionPeriods;
+  }
+
+  public List<Heading> getHeadingList() {
+    return headingList;
+  }
+
+  public void setHeadingList(List<Heading> headingList) {
+    this.headingList = headingList;
+  }
+
+  public String getLastReportDateAsString() {
+    return lastReportDateAsString;
+  }
+
+  public void setLastReportDateAsString(String lastReportDateAsString) {
+    this.lastReportDateAsString = lastReportDateAsString;
+  }
+
+  /*
+   * public String getCreatedDateAsString() { return createdDate != null ?
+   * DateUtils.dateFormat1.format(createdDate) : ""; } public String getDateToString() { return
+   * createdDate != null ? DateUtils.getDateToString(createdDate) : ""; }
+   */
+
+  public String getDeletionPeriodAsString() {
+    return deletionPeriodAsString;
+  }
+
+  public void setDeletionPeriodAsString(String deletionPeriodAsString) {
+    this.deletionPeriodAsString = deletionPeriodAsString;
+  }
+
+  public String getHeadingAsString() {
+    return headingAsString;
+  }
+
+  public void setHeadingAsString(String headingAsString) {
+    this.headingAsString = headingAsString;
+  }
+
+  public String getPopupString() {
+    return popupString;
+  }
+
+  public void setPopupString(String popupString) {
+    this.popupString = popupString;
+  }
+
+  public String getGroupCode() {
+    return groupCode;
+  }
+
+  public void setGroupCode(String groupCode) {
+    this.groupCode = groupCode;
+  }
+
 }

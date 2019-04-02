@@ -30,186 +30,179 @@ import com.google.inject.Inject;
 
 public class CronServlet extends HttpServlet implements GlobalConstants {
 
-	private final GroupDao groupDao;
-	private final GoogleGroupMemberDao googleGroupMemberDao;
-	private Logger logger = Logger.getLogger(this.getClass().getCanonicalName());
+  private final GroupDao groupDao;
+  private final GoogleGroupMemberDao googleGroupMemberDao;
+  private Logger logger = Logger.getLogger(this.getClass().getCanonicalName());
 
+  @Inject
+  public CronServlet(GroupDao groupDao, GoogleGroupMemberDao googleGroupMemberDao) {
+    this.groupDao = groupDao;
+    this.googleGroupMemberDao = googleGroupMemberDao;
+  }
 
-	@Inject
-	public CronServlet(GroupDao groupDao,
-			GoogleGroupMemberDao googleGroupMemberDao) {
-		this.groupDao = groupDao;
-		this.googleGroupMemberDao = googleGroupMemberDao;
-	}
+  @Override
+  protected void service(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
 
-	@Override
-	protected void service(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		
-		logger.log(Level.INFO,"Getting Domain \""+DOMAIN+"\" Groups");
-		DirectoryApi directoryApi = new DirectoryApi();
-		Directory admin = directoryApi.getAdmin();
-		List list = admin.groups().list();
-		logger.log(Level.INFO,"Admin List: "+list.toString());
-		
-		list.setDomain(DOMAIN);
-		Groups groups = list.execute();
-		logger.log(Level.INFO,"Admin Groups: "+groups.toString());
+    logger.log(Level.INFO, "Getting Domain \"" + DOMAIN + "\" Groups");
+    DirectoryApi directoryApi = new DirectoryApi();
+    Directory admin = directoryApi.getAdmin();
+    List list = admin.groups().list();
+    logger.log(Level.INFO, "Admin List: " + list.toString());
 
-		java.util.List<GoogleGroup> gGroupList = new ArrayList<GoogleGroup>();
-		java.util.List<GoogleGroupMember> googleGroupMemberList = new ArrayList<GoogleGroupMember>();
+    list.setDomain(DOMAIN);
+    Groups groups = list.execute();
+    logger.log(Level.INFO, "Admin Groups: " + groups.toString());
 
-		logger.log(Level.INFO,"Admin Group List: "+gGroupList.toString());
-		logger.log(Level.INFO,"Group Members: "+googleGroupMemberList.toString());
+    java.util.List<GoogleGroup> gGroupList = new ArrayList<GoogleGroup>();
+    java.util.List<GoogleGroupMember> googleGroupMemberList = new ArrayList<GoogleGroupMember>();
 
-		while (groups != null) {
-			for (Group group : groups.getGroups()) {
-				String groupName = group.getName();
+    logger.log(Level.INFO, "Admin Group List: " + gGroupList.toString());
+    logger.log(Level.INFO, "Group Members: " + googleGroupMemberList.toString());
 
-				
-				String parentEmail = group.getEmail().toLowerCase();
-				GoogleGroup gGroup = groupDao.getGroupByEmail(parentEmail);
-				GoogleGroupMember googleGroupMember = googleGroupMemberDao.getGoogleGroupMemberByParentEmail(parentEmail);
+    while (groups != null) {
+      for (Group group : groups.getGroups()) {
+        String groupName = group.getName();
 
-				if(groupName==null || "".equals(groupName.trim()) ||
-						(!groupName.toLowerCase().startsWith("_JL Branch:".toLowerCase()) &&
-								!groupName.toLowerCase().startsWith("Branch:".toLowerCase()) &&
-								!groupName.toLowerCase().startsWith("iBr".toLowerCase()) &&
-								!groupName.toLowerCase().startsWith("_JL iBr".toLowerCase()) &&
-								!groupName.toLowerCase().startsWith("iBrowser".toLowerCase())
-								)){
-					
-					continue;
-				}
-				
-				
-				if (gGroup == null) {
-					gGroup = new GoogleGroup();
-					gGroup.setCreatedDate(new Date());
-				}
-				gGroup.setLastUpdatedDate(new Date());
-				gGroup.setName(groupName);
-				gGroup.setEmail(parentEmail);
-				gGroup.setCode(groupName.trim().toUpperCase());
-				gGroup.setIsSystem(groupName.contains("iBrowser-"));
-				gGroupList.add(gGroup);
+        String parentEmail = group.getEmail().toLowerCase();
+        GoogleGroup gGroup = groupDao.getGroupByEmail(parentEmail);
+        GoogleGroupMember googleGroupMember = googleGroupMemberDao
+            .getGoogleGroupMemberByParentEmail(parentEmail);
 
-				com.google.api.services.admin.directory.Directory.Members.List memberList = admin.members().list(parentEmail);
-				
-				Members members = memberList.execute();
+        if (groupName == null || "".equals(groupName.trim())
+            || (!groupName.toLowerCase().startsWith("_JL Branch:".toLowerCase())
+                && !groupName.toLowerCase().startsWith("Branch:".toLowerCase())
+                && !groupName.toLowerCase().startsWith("iBr".toLowerCase())
+                && !groupName.toLowerCase().startsWith("_JL iBr".toLowerCase())
+                && !groupName.toLowerCase().startsWith("iBrowser".toLowerCase()))) {
 
-				java.util.List<String> memberEmailList = new ArrayList<String>();
+          continue;
+        }
 
-				if (members != null && !members.isEmpty()
-						&& members.getMembers() != null
-						&& !members.getMembers().isEmpty()) {
-					for (Member member : members.getMembers()) {
-						if(member.getEmail()!=null && "GROUP".equals(member.getType())){
-							memberEmailList.add(member.getEmail().toLowerCase());							
-						}
-						
-					}
-				}
-				
-				
-				if (googleGroupMember == null) {
-					googleGroupMember = new GoogleGroupMember();
-					googleGroupMember.setCreatedDate(new Date());
-				}
-				googleGroupMember.setLastUpdatedDate(new Date());
-				googleGroupMember.setParentEmail(parentEmail);
-				googleGroupMember.setMemberEmails(memberEmailList);
-				googleGroupMemberList.add(googleGroupMember);
-			}
+        if (gGroup == null) {
+          gGroup = new GoogleGroup();
+          gGroup.setCreatedDate(new Date());
+        }
+        gGroup.setLastUpdatedDate(new Date());
+        gGroup.setName(groupName);
+        gGroup.setEmail(parentEmail);
+        gGroup.setCode(groupName.trim().toUpperCase());
+        gGroup.setIsSystem(groupName.contains("iBrowser-"));
+        gGroupList.add(gGroup);
 
-			if (groups.getNextPageToken() == null) {
-				break;
-			}
+        com.google.api.services.admin.directory.Directory.Members.List memberList = admin.members()
+            .list(parentEmail);
 
-			list.setPageToken(groups.getNextPageToken());
-			groups = list.execute();
-			logger.log(Level.INFO,"Groups list.execute");
+        Members members = memberList.execute();
 
-		}
-		//googleGroupMemberDao.persistAll(googleGroupMemberList);
-		groupDao.persistAll(gGroupList);
-		logger.log(Level.INFO,"Groups persistAll");
-		//
-		if (googleGroupMemberList.size() > 0) {
+        java.util.List<String> memberEmailList = new ArrayList<String>();
 
-			// first clean up old parent emails from the list
-			for (GoogleGroupMember member : googleGroupMemberList) {
-				member.setParentEmails(new HashSet<String>());
-			}
+        if (members != null && !members.isEmpty() && members.getMembers() != null
+            && !members.getMembers().isEmpty()) {
+          for (Member member : members.getMembers()) {
+            if (member.getEmail() != null && "GROUP".equals(member.getType())) {
+              memberEmailList.add(member.getEmail().toLowerCase());
+            }
 
-			// recursively calculate new parent emails
-			for (GoogleGroupMember member : googleGroupMemberList) {
-				getParentEmails(member, googleGroupMemberList, 1);
-			}
+          }
+        }
 
-			googleGroupMemberDao.persistAll(googleGroupMemberList);
-		}
+        if (googleGroupMember == null) {
+          googleGroupMember = new GoogleGroupMember();
+          googleGroupMember.setCreatedDate(new Date());
+        }
+        googleGroupMember.setLastUpdatedDate(new Date());
+        googleGroupMember.setParentEmail(parentEmail);
+        googleGroupMember.setMemberEmails(memberEmailList);
+        googleGroupMemberList.add(googleGroupMember);
+      }
 
-		resp.getWriter().println((new Gson()).toJson(gGroupList));
-		logger.log(Level.INFO,"Group sync completed.");
-		
-		logger.log(Level.INFO,"Old groups clean up started");
-		java.util.List<GoogleGroup> allGroups = groupDao.getAll();
-		for(GoogleGroup group: allGroups){
-			String groupName = group.getName();
-			if(groupName==null || "".equals(groupName.trim()) ||
-					(!groupName.toLowerCase().startsWith("_JL Branch:".toLowerCase()) &&
-							!groupName.toLowerCase().startsWith("Branch:".toLowerCase()) &&
-							!groupName.toLowerCase().startsWith("iBr".toLowerCase()) &&
-							!groupName.toLowerCase().startsWith("_JL iBr".toLowerCase()) &&
-							!groupName.toLowerCase().startsWith("iBrowser".toLowerCase())
-							)){
-				
-				GoogleGroupMember member = googleGroupMemberDao.getGoogleGroupMemberByParentEmail(group.getEmail());
-				logger.log(Level.INFO,"delete: " + group.getName());
-				groupDao.delete(group.getKey());
-				if (member!=null) googleGroupMemberDao.delete(member.getKey());
-				
-			}			
-		}
-		logger.log(Level.INFO,"Old group cleanup completed.");		
-		
+      if (groups.getNextPageToken() == null) {
+        break;
+      }
 
-		
-	}
+      list.setPageToken(groups.getNextPageToken());
+      groups = list.execute();
+      logger.log(Level.INFO, "Groups list.execute");
 
-	
-	public Set<String> getParentEmails(GoogleGroupMember member,
-			java.util.List<GoogleGroupMember> list, int level) {
-		if (member.getVisited())
-			return member.getParentEmails();
-		Set<String> result = new HashSet<String>();
-		if (level >= 10) {
-			logger.log(Level.INFO,"getParentEmails exiting due to recursive endless loop.");
-			return result; // to prevent endless loop
-		}
-		for (GoogleGroupMember parent : list) {
+    }
+    // googleGroupMemberDao.persistAll(googleGroupMemberList);
+    groupDao.persistAll(gGroupList);
+    logger.log(Level.INFO, "Groups persistAll");
+    //
+    if (googleGroupMemberList.size() > 0) {
 
-			for (String child : parent.getMemberEmails()) {
+      // first clean up old parent emails from the list
+      for (GoogleGroupMember member : googleGroupMemberList) {
+        member.setParentEmails(new HashSet<String>());
+      }
 
-				if (child.equals(member.getParentEmail())) {
+      // recursively calculate new parent emails
+      for (GoogleGroupMember member : googleGroupMemberList) {
+        getParentEmails(member, googleGroupMemberList, 1);
+      }
 
-					result.add(parent.getParentEmail());
-					if (parent.getVisited()) {
-						result.addAll(parent.getParentEmails());
-					} else {
-						result.addAll(getParentEmails(parent, list, level + 1));
-					}
+      googleGroupMemberDao.persistAll(googleGroupMemberList);
+    }
 
-				}
-			}
-		}
+    resp.getWriter().println((new Gson()).toJson(gGroupList));
+    logger.log(Level.INFO, "Group sync completed.");
 
-		member.setParentEmails(result);
-		member.setVisited(true);
+    logger.log(Level.INFO, "Old groups clean up started");
+    java.util.List<GoogleGroup> allGroups = groupDao.getAll();
+    for (GoogleGroup group : allGroups) {
+      String groupName = group.getName();
+      if (groupName == null || "".equals(groupName.trim())
+          || (!groupName.toLowerCase().startsWith("_JL Branch:".toLowerCase())
+              && !groupName.toLowerCase().startsWith("Branch:".toLowerCase())
+              && !groupName.toLowerCase().startsWith("iBr".toLowerCase())
+              && !groupName.toLowerCase().startsWith("_JL iBr".toLowerCase())
+              && !groupName.toLowerCase().startsWith("iBrowser".toLowerCase()))) {
 
-		return result;
+        GoogleGroupMember member = googleGroupMemberDao
+            .getGoogleGroupMemberByParentEmail(group.getEmail());
+        logger.log(Level.INFO, "delete: " + group.getName());
+        groupDao.delete(group.getKey());
+        if (member != null)
+          googleGroupMemberDao.delete(member.getKey());
 
-	}
+      }
+    }
+    logger.log(Level.INFO, "Old group cleanup completed.");
+
+  }
+
+  public Set<String> getParentEmails(GoogleGroupMember member,
+      java.util.List<GoogleGroupMember> list, int level) {
+    if (member.getVisited())
+      return member.getParentEmails();
+    Set<String> result = new HashSet<String>();
+    if (level >= 10) {
+      logger.log(Level.INFO, "getParentEmails exiting due to recursive endless loop.");
+      return result; // to prevent endless loop
+    }
+    for (GoogleGroupMember parent : list) {
+
+      for (String child : parent.getMemberEmails()) {
+
+        if (child.equals(member.getParentEmail())) {
+
+          result.add(parent.getParentEmail());
+          if (parent.getVisited()) {
+            result.addAll(parent.getParentEmails());
+          } else {
+            result.addAll(getParentEmails(parent, list, level + 1));
+          }
+
+        }
+      }
+    }
+
+    member.setParentEmails(result);
+    member.setVisited(true);
+
+    return result;
+
+  }
 
 }

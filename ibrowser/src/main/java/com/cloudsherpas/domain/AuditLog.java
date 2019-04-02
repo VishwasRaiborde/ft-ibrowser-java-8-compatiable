@@ -1,191 +1,190 @@
 package com.cloudsherpas.domain;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
+
 import com.cloudsherpas.dao.BaseEntity;
 import com.google.appengine.api.datastore.Text;
 
 @PersistenceCapable
 public class AuditLog extends BaseEntity {
-	
-	@Persistent
-	private String email;
-	
-	@Persistent
-	private String title;
-	
-	@Persistent
-	private String code;
-	
-	@Persistent
-	private String groupCode;
-	
-	@Persistent
-	private String heading; 
-	
-	@Persistent
-	private String type; 
-	
-	@Persistent
-	private String deletion; 
-	
-	@Persistent
-	private String frequency; 
-	
-	@Persistent
-	private Date reportDate;
-	
-	@Persistent
-	private Date viewDate;
 
-	@Persistent
-	private String deviceType;
-	
-	@Persistent
-	private  String status;
-	
-	@Persistent
-	private  String fileName;
-	
-	@Persistent
-	private  String fileSize;
-	
-	@Persistent
-	private  String userBranch;
-	
-	@Persistent
-	private  Text userGroups;
-	
-	
-	public String getEmail() {
-		return email;
-	}
+  @Persistent
+  private String email;
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+  @Persistent
+  private String title;
 
-	public String getTitle() {	
-		return title;
-	}
+  @Persistent
+  private String code;
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+  @Persistent
+  private String groupCode;
 
-	public String getCode() {
-		return code;
-	}
+  @Persistent
+  private String heading;
 
-	public void setCode(String code) {
-		this.code = code;
-	}
+  @Persistent
+  private String type;
 
-	public String getGroupCode() {
-		return groupCode;
-	}
+  @Persistent
+  private String deletion;
 
-	public void setGroupCode(String groupCode) {
-		this.groupCode = groupCode;
-	}
+  @Persistent
+  private String frequency;
 
-	public String getHeading() {
-		return heading;
-	}
+  @Persistent
+  private Date reportDate;
 
-	public void setHeading(String heading) {
-		this.heading = heading;
-	}
+  @Persistent
+  private Date viewDate;
 
-	public String getType() {
-		return type;
-	}
+  @Persistent
+  private String deviceType;
 
-	public void setType(String type) {
-		this.type = type;
-	}
+  @Persistent
+  private String status;
 
-	public String getDeletion() {
-		return deletion;
-	}
+  @Persistent
+  private String fileName;
 
-	public void setDeletion(String deletion) {
-		this.deletion = deletion;
-	}
+  @Persistent
+  private String fileSize;
 
-	public String getFrequency() {
-		return frequency;
-	}
+  @Persistent
+  private String userBranch;
 
-	public void setFrequency(String frequency) {
-		this.frequency = frequency;
-	}
+  @Persistent
+  private Text userGroups;
 
-	public Date getReportDate() {
-		return reportDate;
-	}
+  public String getEmail() {
+    return email;
+  }
 
-	public void setReportDate(Date reportDate) {
-		this.reportDate = reportDate;
-	}
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-	public Date getViewDate() {
-		return viewDate;
-	}
+  public String getTitle() {
+    return title;
+  }
 
-	public void setViewDate(Date viewDate) {
-		this.viewDate = viewDate;
-	}
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-	public String getDeviceType() {
-		return deviceType;
-	}
+  public String getCode() {
+    return code;
+  }
 
-	public void setDeviceType(String deviceType) {
-		this.deviceType = deviceType;
-	}
-	
-	public String getStatus() {
-		return status;
-	}
+  public void setCode(String code) {
+    this.code = code;
+  }
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+  public String getGroupCode() {
+    return groupCode;
+  }
 
-	public String getFileName() {
-		return fileName;
-	}
+  public void setGroupCode(String groupCode) {
+    this.groupCode = groupCode;
+  }
 
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
+  public String getHeading() {
+    return heading;
+  }
 
-	public String getUserBranch() {
-		return userBranch;
-	}
+  public void setHeading(String heading) {
+    this.heading = heading;
+  }
 
-	public void setUserBranch(String userBranch) {
-		this.userBranch = userBranch;
-	}
+  public String getType() {
+    return type;
+  }
 
-	public String getFileSize() {
-		return fileSize;
-	}
+  public void setType(String type) {
+    this.type = type;
+  }
 
-	public void setFileSize(String fileSize) {
-		this.fileSize = fileSize;
-	}
+  public String getDeletion() {
+    return deletion;
+  }
 
-	public String getUserGroups() {
-		return userGroups.getValue();
-	}
+  public void setDeletion(String deletion) {
+    this.deletion = deletion;
+  }
 
-	public void setUserGroups(String userGroups) {
-		this.userGroups = new Text(userGroups);
-	}   
+  public String getFrequency() {
+    return frequency;
+  }
+
+  public void setFrequency(String frequency) {
+    this.frequency = frequency;
+  }
+
+  public Date getReportDate() {
+    return reportDate;
+  }
+
+  public void setReportDate(Date reportDate) {
+    this.reportDate = reportDate;
+  }
+
+  public Date getViewDate() {
+    return viewDate;
+  }
+
+  public void setViewDate(Date viewDate) {
+    this.viewDate = viewDate;
+  }
+
+  public String getDeviceType() {
+    return deviceType;
+  }
+
+  public void setDeviceType(String deviceType) {
+    this.deviceType = deviceType;
+  }
+
+  public String getStatus() {
+    return status;
+  }
+
+  public void setStatus(String status) {
+    this.status = status;
+  }
+
+  public String getFileName() {
+    return fileName;
+  }
+
+  public void setFileName(String fileName) {
+    this.fileName = fileName;
+  }
+
+  public String getUserBranch() {
+    return userBranch;
+  }
+
+  public void setUserBranch(String userBranch) {
+    this.userBranch = userBranch;
+  }
+
+  public String getFileSize() {
+    return fileSize;
+  }
+
+  public void setFileSize(String fileSize) {
+    this.fileSize = fileSize;
+  }
+
+  public String getUserGroups() {
+    return userGroups.getValue();
+  }
+
+  public void setUserGroups(String userGroups) {
+    this.userGroups = new Text(userGroups);
+  }
 
 }

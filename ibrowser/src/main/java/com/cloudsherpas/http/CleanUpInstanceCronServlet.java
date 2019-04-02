@@ -1,4 +1,5 @@
 package com.cloudsherpas.http;
+
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -16,18 +17,18 @@ import com.google.inject.Singleton;
 
 @Singleton
 @SuppressWarnings("serial")
-public class CleanUpInstanceCronServlet extends HttpServlet{
-	@Override
-	protected void service(HttpServletRequest arg0, HttpServletResponse arg1)
-			throws ServletException, IOException {
-		Queue queue = QueueFactory.getQueue("AppQueue");
-		  TaskOptions taskOptions = TaskOptions.Builder.withUrl("/clean-up-instances")
-				  .header("Host", ModulesServiceFactory.getModulesService().getModuleHostname("ibrowser-backend","2"))
-				  .method(Method.GET);
+public class CleanUpInstanceCronServlet extends HttpServlet {
+  @Override
+  protected void service(HttpServletRequest arg0, HttpServletResponse arg1)
+      throws ServletException, IOException {
+    Queue queue = QueueFactory.getQueue("AppQueue");
+    TaskOptions taskOptions = TaskOptions.Builder.withUrl("/clean-up-instances")
+        .header("Host",
+            ModulesServiceFactory.getModulesService().getModuleHostname("ibrowser-backend", "2"))
+        .method(Method.GET);
 //		                            .header("Host", BackendServiceFactory.getBackendService().getBackendAddress("report-instance-backend"))
 //		                            .method(Method.GET);
-		  queue.add(taskOptions);
-	}
-
+    queue.add(taskOptions);
+  }
 
 }

@@ -15,20 +15,20 @@ import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.google.inject.Singleton;
 
-
 @Singleton
 @SuppressWarnings("serial")
-public class AuditLogCronServlet extends HttpServlet{
-	
-	@Override
-	protected void service(HttpServletRequest arg0, HttpServletResponse arg1) 
-			 throws ServletException, IOException {
-		Queue queue = QueueFactory.getQueue("AppQueue");
-		  TaskOptions taskOptions = TaskOptions.Builder.withUrl("/bigquery-audit-logs")
-				  .header("Host", ModulesServiceFactory.getModulesService().getModuleHostname("ibrowser-backend","2"))
-                  .method(Method.GET);
-		  
+public class AuditLogCronServlet extends HttpServlet {
+
+  @Override
+  protected void service(HttpServletRequest arg0, HttpServletResponse arg1)
+      throws ServletException, IOException {
+    Queue queue = QueueFactory.getQueue("AppQueue");
+    TaskOptions taskOptions = TaskOptions.Builder.withUrl("/bigquery-audit-logs")
+        .header("Host",
+            ModulesServiceFactory.getModulesService().getModuleHostname("ibrowser-backend", "2"))
+        .method(Method.GET);
+
 //		            .header("Host", BackendServiceFactory.getBackendService().getBackendAddress("report-instance-backend"))
-		  queue.add(taskOptions);
-	}
+    queue.add(taskOptions);
+  }
 }

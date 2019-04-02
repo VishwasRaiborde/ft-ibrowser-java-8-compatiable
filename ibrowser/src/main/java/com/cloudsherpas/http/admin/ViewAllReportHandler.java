@@ -14,38 +14,38 @@ import com.google.inject.Inject;
 
 public class ViewAllReportHandler {
 
-	private final ReportDao reportDao;
-	private final ApiHttpUtils utils;
-	
-	@Inject
-	public ViewAllReportHandler(ReportDao reportDao, ApiHttpUtils utils) {
-		this.reportDao = reportDao;
-		this.utils = utils;
-	}
-	
-	public String get(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-		List<Report> list = reportDao.getAllEntityList();
-		if (list != null && !list.isEmpty()) {
-			for (Report report : list) {
-				report.setKeyAsString();
-				report.setTypeAsString(report.getReportType().getName());
-			}
-		}
-		req.setAttribute("content_holder", "admin/viewAllReport.html");
-		req.setAttribute("reports", list);
-		return "OK";
-	}
+  private final ReportDao reportDao;
+  private final ApiHttpUtils utils;
 
-	public void post(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-		CreateReportRequest hr = (CreateReportRequest)utils.readPost(req, CreateReportRequest.class);
-		List<Report> list = reportDao.getEntitiesByParam(hr.sortField, hr.order,hr.step);
-		if (list != null && !list.isEmpty()) {
-			for (Report report : list) {
-				report.setKeyAsString();
-				report.setTypeAsString(report.getReportType().getName());
-			}
-		}
-		utils.sendResponse(resp, list);	
-	}
-	
+  @Inject
+  public ViewAllReportHandler(ReportDao reportDao, ApiHttpUtils utils) {
+    this.reportDao = reportDao;
+    this.utils = utils;
+  }
+
+  public String get(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    List<Report> list = reportDao.getAllEntityList();
+    if (list != null && !list.isEmpty()) {
+      for (Report report : list) {
+        report.setKeyAsString();
+        report.setTypeAsString(report.getReportType().getName());
+      }
+    }
+    req.setAttribute("content_holder", "admin/viewAllReport.html");
+    req.setAttribute("reports", list);
+    return "OK";
+  }
+
+  public void post(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    CreateReportRequest hr = (CreateReportRequest) utils.readPost(req, CreateReportRequest.class);
+    List<Report> list = reportDao.getEntitiesByParam(hr.sortField, hr.order, hr.step);
+    if (list != null && !list.isEmpty()) {
+      for (Report report : list) {
+        report.setKeyAsString();
+        report.setTypeAsString(report.getReportType().getName());
+      }
+    }
+    utils.sendResponse(resp, list);
+  }
+
 }

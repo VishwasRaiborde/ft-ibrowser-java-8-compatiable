@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.appengine.api.backends.BackendServiceFactory;
 import com.google.appengine.api.labs.modules.ModulesServiceFactory;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
@@ -19,16 +18,17 @@ import com.google.inject.Singleton;
 @SuppressWarnings("serial")
 public class LeapYearPatchCronServlet2 extends HttpServlet {
 
-	@Override
-	protected void service(HttpServletRequest arg0, HttpServletResponse arg1)
-			throws ServletException, IOException {
-		Queue queue = QueueFactory.getQueue("AppQueue2");
-		  TaskOptions taskOptions = TaskOptions.Builder.withUrl("/leap-year-patch2")
-				  .header("Host", ModulesServiceFactory.getModulesService().getModuleHostname("ibrowser-backend","2"))
-				  .method(Method.GET);
+  @Override
+  protected void service(HttpServletRequest arg0, HttpServletResponse arg1)
+      throws ServletException, IOException {
+    Queue queue = QueueFactory.getQueue("AppQueue2");
+    TaskOptions taskOptions = TaskOptions.Builder.withUrl("/leap-year-patch2")
+        .header("Host",
+            ModulesServiceFactory.getModulesService().getModuleHostname("ibrowser-backend", "2"))
+        .method(Method.GET);
 //		                            .header("Host", BackendServiceFactory.getBackendService().getBackendAddress("report-instance-backend"))
 //		                            .method(Method.GET);
-		  queue.add(taskOptions);
-	}
+    queue.add(taskOptions);
+  }
 
 }

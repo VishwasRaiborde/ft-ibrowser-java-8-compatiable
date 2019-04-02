@@ -8,22 +8,22 @@ import com.litemvc.LiteMvcFilter;
 
 @Singleton
 public class TaskQueueRoutingFilter extends LiteMvcFilter {
-	
-	private Injector injector;
-	
-	@Inject
-	public void setInjector(Injector injector) {
-		this.injector = injector;
-	}
 
-	@Override
-	public void configure() {
-		map(GlobalConstants.TASK_QUEUE + "/group", GoogleGroupQueueServlet.class);
-	}
+  private Injector injector;
 
-	@Override
-	public Object createObject(Class<?> clazz) throws Exception {
-		return injector.getInstance(clazz);
-	}
+  @Inject
+  public void setInjector(Injector injector) {
+    this.injector = injector;
+  }
+
+  @Override
+  public void configure() {
+    map(GlobalConstants.TASK_QUEUE + "/group", GoogleGroupQueueServlet.class);
+  }
+
+  @Override
+  public Object createObject(Class<?> clazz) throws Exception {
+    return injector.getInstance(clazz);
+  }
 
 }

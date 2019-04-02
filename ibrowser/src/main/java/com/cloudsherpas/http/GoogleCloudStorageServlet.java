@@ -18,35 +18,37 @@ import com.google.inject.Singleton;
 
 @Singleton
 @SuppressWarnings("serial")
-public class GoogleCloudStorageServlet extends HttpServlet{
-	
-	private final InstanceDao instanceDao;
-	private final TradingYearDao tradingYearDao;
-	private final ReportDao reportDao;
-	private final NotificationDao notificationDao;
-	private final DateUtils dateUtils;
-	
-	@Inject
-	public GoogleCloudStorageServlet(InstanceDao instanceDao, TradingYearDao tradingYearDao, ReportDao reportDao,
-			NotificationDao notificationDao,DateUtils dateUtils){
-		this.instanceDao = instanceDao;
-		this.tradingYearDao = tradingYearDao;
-		this.reportDao = reportDao;
-		this.notificationDao = notificationDao;
-		this.dateUtils = dateUtils;
-	}
-	
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		GoogleCloudStorageApi gcsApi = new GoogleCloudStorageApi(instanceDao, tradingYearDao, reportDao,notificationDao, dateUtils);
-		gcsApi.init();
-		gcsApi.run();
-	
-	}
+public class GoogleCloudStorageServlet extends HttpServlet {
 
+  private final InstanceDao instanceDao;
+  private final TradingYearDao tradingYearDao;
+  private final ReportDao reportDao;
+  private final NotificationDao notificationDao;
+  private final DateUtils dateUtils;
 
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		
-	}
+  @Inject
+  public GoogleCloudStorageServlet(InstanceDao instanceDao, TradingYearDao tradingYearDao,
+      ReportDao reportDao, NotificationDao notificationDao, DateUtils dateUtils) {
+    this.instanceDao = instanceDao;
+    this.tradingYearDao = tradingYearDao;
+    this.reportDao = reportDao;
+    this.notificationDao = notificationDao;
+    this.dateUtils = dateUtils;
+  }
+
+  @Override
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
+    GoogleCloudStorageApi gcsApi = new GoogleCloudStorageApi(instanceDao, tradingYearDao, reportDao,
+        notificationDao, dateUtils);
+    gcsApi.init();
+    gcsApi.run();
+
+  }
+
+  @Override
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
+
+  }
 }

@@ -11,64 +11,63 @@ import com.cloudsherpas.enums.ReportTypeEnum;
 
 @PersistenceCapable
 public class Type extends BaseEntity {
-	
-	@Persistent
-	private ReportTypeEnum type;
-	
-	@Persistent
-	private String groupName;
-	
-	@Persistent
-	private String groupCode;
-	
-	@NotPersistent
-	private List<ReportTypeEnum> typeList;
-	
-	@NotPersistent
-	private String nameAsString;
-	
-	public ReportTypeEnum getType() {
-		return type;
-	}
 
-	public void setType(ReportTypeEnum type) {
-		this.type = type;
-	}
-	
-	public String getGroupName() {
-		return groupName;
-	}
+  @Persistent
+  private ReportTypeEnum type;
 
-	public void setGroupName(String groupName) {
-		this.groupName = groupName;
-	}
+  @Persistent
+  private String groupName;
 
-	public String getGroupCode() {
-		return groupCode;
-	}
+  @Persistent
+  private String groupCode;
 
-	public void setGroupCode(String groupCode) {
-		this.groupCode = groupCode;
-	}
+  @NotPersistent
+  private List<ReportTypeEnum> typeList;
 
-	public List<ReportTypeEnum> getTypeList() {
-		return typeList;
-	}
+  @NotPersistent
+  private String nameAsString;
 
-	public void setTypeList(List<ReportTypeEnum> typeList) {
-		this.typeList = typeList;
-	}
+  public ReportTypeEnum getType() {
+    return type;
+  }
 
-	public String getNameAsString() {
-		if (nameAsString == null && type != null) {
-			nameAsString = type.getName();
-		}
-		return nameAsString;
-	}
+  public void setType(ReportTypeEnum type) {
+    this.type = type;
+  }
 
-	public void setNameAsString(String nameAsString) {
-		this.nameAsString = nameAsString;
-	}
-	
-	
+  public String getGroupName() {
+    return groupName;
+  }
+
+  public void setGroupName(String groupName) {
+    this.groupName = groupName;
+  }
+
+  public String getGroupCode() {
+    return groupCode;
+  }
+
+  public void setGroupCode(String groupCode) {
+    this.groupCode = groupCode;
+  }
+
+  public List<ReportTypeEnum> getTypeList() {
+    return typeList;
+  }
+
+  public void setTypeList(List<ReportTypeEnum> typeList) {
+    this.typeList = typeList;
+  }
+
+  public String getNameAsString() {
+    if (nameAsString == null && type != null) {
+      nameAsString = type.getName();
+    }
+    return nameAsString;
+  }
+
+  public void setNameAsString(String nameAsString) {
+    this.nameAsString = nameAsString;
+  }
+
 }

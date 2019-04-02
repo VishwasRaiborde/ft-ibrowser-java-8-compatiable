@@ -10,51 +10,50 @@ import javax.jdo.annotations.Persistent;
 import com.cloudsherpas.dao.BaseEntity;
 
 @PersistenceCapable
-public class GoogleGroupMember extends BaseEntity{
+public class GoogleGroupMember extends BaseEntity {
 
-	@Persistent
-	private Set<String> parentEmails;
-	
-	@Persistent
-	private String parentEmail;
-	
-	@Persistent
-	private List<String> memberEmails;
-	
-	@NotPersistent
-	private Boolean visited = Boolean.FALSE;
-	
-	public String getParentEmail() {
-		return parentEmail;
-	}
+  @Persistent
+  private Set<String> parentEmails;
 
-	public void setParentEmail(String parentEmail) {
-		this.parentEmail = parentEmail;
-	}
+  @Persistent
+  private String parentEmail;
 
-	public Set<String> getParentEmails() {
-		return parentEmails;
-	}
+  @Persistent
+  private List<String> memberEmails;
 
-	public void setParentEmails(Set<String> parentEmails) {
-		this.parentEmails = parentEmails;
-	}
-	public List<String> getMemberEmails() {
-		return memberEmails;
-	}
+  @NotPersistent
+  private Boolean visited = Boolean.FALSE;
 
-	public void setMemberEmails(List<String> memberEmails) {
-		this.memberEmails = memberEmails;
-	}
+  public String getParentEmail() {
+    return parentEmail;
+  }
 
-	public Boolean getVisited() {
-		return visited;
-	}
+  public void setParentEmail(String parentEmail) {
+    this.parentEmail = parentEmail;
+  }
 
-	public void setVisited(Boolean visited) {
-		this.visited = visited;
-	}
-	
-	
+  public Set<String> getParentEmails() {
+    return parentEmails;
+  }
+
+  public void setParentEmails(Set<String> parentEmails) {
+    this.parentEmails = parentEmails;
+  }
+
+  public List<String> getMemberEmails() {
+    return memberEmails;
+  }
+
+  public void setMemberEmails(List<String> memberEmails) {
+    this.memberEmails = memberEmails;
+  }
+
+  public Boolean getVisited() {
+    return visited;
+  }
+
+  public void setVisited(Boolean visited) {
+    this.visited = visited;
+  }
 
 }

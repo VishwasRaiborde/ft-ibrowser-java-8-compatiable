@@ -7,8 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public class NoAccessPageHandler {
 
-	public String get(HttpServletRequest req, HttpServletResponse resp)
-			throws IOException {
-		return "OK";
-	}
+  public String get(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    return "OK";
+  }
 }

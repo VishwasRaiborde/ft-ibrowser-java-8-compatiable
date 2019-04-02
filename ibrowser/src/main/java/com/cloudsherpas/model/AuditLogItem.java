@@ -3,105 +3,105 @@ package com.cloudsherpas.model;
 import java.util.Date;
 
 public class AuditLogItem {
-  
-	public String email;
-	
-	public String title;
-	
-	public String code;
-	
-	public String heading; 
-	
-	public String type; 
-	
-	public String deletion; 
-	
-	public String frequency; 
-		
-	public Date reportDate;
-	
-	public Date timestamp;
 
-	public String deviceType;
+  public String email;
 
-	public String getEmail() {
-		return email;
-	}
+  public String title;
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+  public String code;
 
-	public String getTitle() {
-		return title;
-	}
+  public String heading;
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+  public String type;
 
-	public String getCode() {
-		return code;
-	}
+  public String deletion;
 
-	public void setCode(String code) {
-		this.code = code;
-	}
+  public String frequency;
 
-	public String getHeading() {
-		return heading;
-	}
+  public Date reportDate;
 
-	public void setHeading(String heading) {
-		this.heading = heading;
-	}
+  public Date timestamp;
 
-	public String getType() {
-		return type;
-	}
+  public String deviceType;
 
-	public void setType(String type) {
-		this.type = type;
-	}
+  public String getEmail() {
+    return email;
+  }
 
-	public String getDeletion() {
-		return deletion;
-	}
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-	public void setDeletion(String deletion) {
-		this.deletion = deletion;
-	}
+  public String getTitle() {
+    return title;
+  }
 
-	public String getFrequency() {
-		return frequency;
-	}
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-	public void setFrequency(String frequency) {
-		this.frequency = frequency;
-	}
+  public String getCode() {
+    return code;
+  }
 
-	public Date getReportDate() {
-		return reportDate;
-	}
+  public void setCode(String code) {
+    this.code = code;
+  }
 
-	public void setReportDate(Date reportDate) {
-		this.reportDate = reportDate;
-	}
+  public String getHeading() {
+    return heading;
+  }
 
-	public Date getTimestamp() {
-		return timestamp;
-	}
+  public void setHeading(String heading) {
+    this.heading = heading;
+  }
 
-	public void setTimestamp(Date timestamp) {
-		this.timestamp = timestamp;
-	}
+  public String getType() {
+    return type;
+  }
 
-	public String getDeviceType() {
-		return deviceType;
-	}
+  public void setType(String type) {
+    this.type = type;
+  }
 
-	public void setDeviceType(String deviceType) {
-		this.deviceType = deviceType;
-	}
-	
+  public String getDeletion() {
+    return deletion;
+  }
+
+  public void setDeletion(String deletion) {
+    this.deletion = deletion;
+  }
+
+  public String getFrequency() {
+    return frequency;
+  }
+
+  public void setFrequency(String frequency) {
+    this.frequency = frequency;
+  }
+
+  public Date getReportDate() {
+    return reportDate;
+  }
+
+  public void setReportDate(Date reportDate) {
+    this.reportDate = reportDate;
+  }
+
+  public Date getTimestamp() {
+    return timestamp;
+  }
+
+  public void setTimestamp(Date timestamp) {
+    this.timestamp = timestamp;
+  }
+
+  public String getDeviceType() {
+    return deviceType;
+  }
+
+  public void setDeviceType(String deviceType) {
+    this.deviceType = deviceType;
+  }
+
 }

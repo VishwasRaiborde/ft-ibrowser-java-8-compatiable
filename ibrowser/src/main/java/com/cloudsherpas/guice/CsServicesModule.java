@@ -24,43 +24,46 @@ import com.google.inject.Singleton;
 
 public class CsServicesModule extends AbstractModule {
 
-	@Override
-	protected void configure() {
-		bind(CronServlet.class).asEagerSingleton();
-		bind(GoogleGroupQueueServlet.class).asEagerSingleton();
-		bind(GoogleCloudStorageApi.class).asEagerSingleton();
-		bind(CleanupAgentServlet.class).asEagerSingleton();
-		bind(LeapYearPatch.class).asEagerSingleton();
-		bind(LeapYearPatch2.class).asEagerSingleton();
-		/*bind(EntityDeleteServlet.class).asEagerSingleton();
-		bind(TradingYearServlet.class).asEagerSingleton();*/
-		bind(AuditLogMapReduceServlet.class).asEagerSingleton();
-	}
+  @Override
+  protected void configure() {
+    bind(CronServlet.class).asEagerSingleton();
+    bind(GoogleGroupQueueServlet.class).asEagerSingleton();
+    bind(GoogleCloudStorageApi.class).asEagerSingleton();
+    bind(CleanupAgentServlet.class).asEagerSingleton();
+    bind(LeapYearPatch.class).asEagerSingleton();
+    bind(LeapYearPatch2.class).asEagerSingleton();
+    /*
+     * bind(EntityDeleteServlet.class).asEagerSingleton();
+     * bind(TradingYearServlet.class).asEagerSingleton();
+     */
+    bind(AuditLogMapReduceServlet.class).asEagerSingleton();
+  }
 
-	@Provides
-	@Singleton
-	public PersistenceManagerFactory provideEntityManagerFactory() {
-		return JDOHelper.getPersistenceManagerFactory("transactions-optional");
-	}
-	@Provides
-	@Singleton
-	public DatastoreService provideDatastoreServiceFactory() {
-		return DatastoreServiceFactory.getDatastoreService();
-	}
+  @Provides
+  @Singleton
+  public PersistenceManagerFactory provideEntityManagerFactory() {
+    return JDOHelper.getPersistenceManagerFactory("transactions-optional");
+  }
 
-	@Provides
-	public UserService provideUserService() {
-		return UserServiceFactory.getUserService();
-	}
-	
-	@Provides
-	public MemcacheService provideMemcacheService() {
-		return MemcacheServiceFactory.getMemcacheService();
-	}
+  @Provides
+  @Singleton
+  public DatastoreService provideDatastoreServiceFactory() {
+    return DatastoreServiceFactory.getDatastoreService();
+  }
 
-	@Provides
-	public BlobstoreService provideBlobstoreService() {
-		return BlobstoreServiceFactory.getBlobstoreService();
-	}
+  @Provides
+  public UserService provideUserService() {
+    return UserServiceFactory.getUserService();
+  }
+
+  @Provides
+  public MemcacheService provideMemcacheService() {
+    return MemcacheServiceFactory.getMemcacheService();
+  }
+
+  @Provides
+  public BlobstoreService provideBlobstoreService() {
+    return BlobstoreServiceFactory.getBlobstoreService();
+  }
 
 }

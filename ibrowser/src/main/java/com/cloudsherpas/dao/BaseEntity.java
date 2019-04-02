@@ -19,55 +19,57 @@ import com.google.appengine.api.datastore.KeyFactory;
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 @Inheritance(strategy = InheritanceStrategy.SUBCLASS_TABLE)
 public abstract class BaseEntity implements Serializable {
-  
-	@PrimaryKey
-    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-	protected Key key;
-	
-	@Persistent
-	protected Date createdDate;
-	
-	@Persistent
-	protected Date lastUpdatedDate;
-	
-	@NotPersistent
-	protected String keyAsString;
 
-	public Key getKey() {
-		return key;
-	}
+  @PrimaryKey
+  @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+  protected Key key;
 
-	public void setKey(Key key) {
-		this.key = key;
-	}
+  @Persistent
+  protected Date createdDate;
 
-	public Date getCreatedDate() {
-		return createdDate;
-	}
+  @Persistent
+  protected Date lastUpdatedDate;
 
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
+  @NotPersistent
+  protected String keyAsString;
 
-	public Date getLastUpdatedDate() {
-		return lastUpdatedDate;
-	}
+  public Key getKey() {
+    return key;
+  }
 
-	public void setLastUpdatedDate(Date lastUpdatedDate) {
-		this.lastUpdatedDate = lastUpdatedDate;
-	}
-	public String getKeyAsString() {
-		if (keyAsString == null && key!=null) {
-			keyAsString = KeyFactory.keyToString(key);
-		}
-		return keyAsString;
-	}
+  public void setKey(Key key) {
+    this.key = key;
+  }
 
-	public void setKeyAsString() {
-		keyAsString = KeyFactory.keyToString(key);
-	} 
-	public boolean isNew() {
-	    return getKey() == null;
-	}
-	
+  public Date getCreatedDate() {
+    return createdDate;
+  }
+
+  public void setCreatedDate(Date createdDate) {
+    this.createdDate = createdDate;
+  }
+
+  public Date getLastUpdatedDate() {
+    return lastUpdatedDate;
+  }
+
+  public void setLastUpdatedDate(Date lastUpdatedDate) {
+    this.lastUpdatedDate = lastUpdatedDate;
+  }
+
+  public String getKeyAsString() {
+    if (keyAsString == null && key != null) {
+      keyAsString = KeyFactory.keyToString(key);
+    }
+    return keyAsString;
+  }
+
+  public void setKeyAsString() {
+    keyAsString = KeyFactory.keyToString(key);
+  }
+
+  public boolean isNew() {
+    return getKey() == null;
+  }
+
 }

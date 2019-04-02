@@ -13,35 +13,37 @@ import com.cloudsherpas.utils.ApiHttpUtils;
 import com.google.inject.Inject;
 
 public class NewsHandler {
-   private final NewsDao newsDao;
-   private final ApiHttpUtils utils;
-   
-   @Inject
-   public NewsHandler(NewsDao newsDao,ApiHttpUtils utils){
-	   this.newsDao = newsDao;
-	   this.utils = utils;
-   }  
-   public String get(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-		List<News> list = newsDao.getEntityList();
-		Integer listCount = newsDao.getEntityCount();
-		if (list != null && !list.isEmpty()) {
-			for (News news : list) {
-				news.setKeyAsString();
-			}
-		}
-		req.setAttribute("content_holder", "admin/news.html");
-		req.setAttribute("news", list);
-		req.setAttribute("count", listCount);
-		return "OK";
-	}
-   public void post(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-		NewsRequest nr = (NewsRequest)utils.readPost(req, NewsRequest.class);
-		List<News> list = newsDao.getEntitiesByParam(nr.sortField, nr.order,nr.step);
-		if (list != null && !list.isEmpty()) {
-			for (News news : list) {
-				news.setKeyAsString();
-			}
-		}
-		utils.sendResponse(resp, list);
-	}
+  private final NewsDao newsDao;
+  private final ApiHttpUtils utils;
+
+  @Inject
+  public NewsHandler(NewsDao newsDao, ApiHttpUtils utils) {
+    this.newsDao = newsDao;
+    this.utils = utils;
+  }
+
+  public String get(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    List<News> list = newsDao.getEntityList();
+    Integer listCount = newsDao.getEntityCount();
+    if (list != null && !list.isEmpty()) {
+      for (News news : list) {
+        news.setKeyAsString();
+      }
+    }
+    req.setAttribute("content_holder", "admin/news.html");
+    req.setAttribute("news", list);
+    req.setAttribute("count", listCount);
+    return "OK";
+  }
+
+  public void post(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    NewsRequest nr = (NewsRequest) utils.readPost(req, NewsRequest.class);
+    List<News> list = newsDao.getEntitiesByParam(nr.sortField, nr.order, nr.step);
+    if (list != null && !list.isEmpty()) {
+      for (News news : list) {
+        news.setKeyAsString();
+      }
+    }
+    utils.sendResponse(resp, list);
+  }
 }

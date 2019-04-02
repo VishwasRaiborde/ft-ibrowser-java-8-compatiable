@@ -9,71 +9,72 @@ import com.cloudsherpas.dao.BaseEntity;
 import com.cloudsherpas.enums.ReportPeriodEnum;
 
 @PersistenceCapable
-public class PatchInstance extends BaseEntity{
-	
-	@Persistent
-	private String reportCode;
-	
-	@Persistent
-	private String groupCode;
-	
-	@Persistent
-	private Date date;
-	
-	@Persistent
-	private ReportPeriodEnum period;
-	
-	@Persistent
-	private String fileName;
-	
-	@Persistent
-	private String fileSize;
-	
-	public String getReportCode() {
-		return reportCode;
-	}
+public class PatchInstance extends BaseEntity {
 
-	public void setReportCode(String reportCode) {
-		this.reportCode = reportCode;
-	}
+  @Persistent
+  private String reportCode;
 
-	public String getGroupCode() {
-		return groupCode;
-	}
+  @Persistent
+  private String groupCode;
 
-	public void setGroupCode(String groupCode) {
-		this.groupCode = groupCode;
-	}
+  @Persistent
+  private Date date;
 
-	public Date getDate() {
-		return date;
-	}
+  @Persistent
+  private ReportPeriodEnum period;
 
-	public void setDate(Date date) {
-		this.date = date;
-	}
+  @Persistent
+  private String fileName;
 
-	public ReportPeriodEnum getPeriod() {
-		return period;
-	}
-	public void setPeriod(ReportPeriodEnum period) {
-		this.period = period;
-	}
+  @Persistent
+  private String fileSize;
 
-	public String getFileName() {
-		return fileName;
-	}
+  public String getReportCode() {
+    return reportCode;
+  }
 
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
+  public void setReportCode(String reportCode) {
+    this.reportCode = reportCode;
+  }
 
-	public String getFileSize() {
-		return fileSize;
-	}
+  public String getGroupCode() {
+    return groupCode;
+  }
 
-	public void setFileSize(String fileSize) {
-		this.fileSize = fileSize;
-	}
-	
+  public void setGroupCode(String groupCode) {
+    this.groupCode = groupCode;
+  }
+
+  public Date getDate() {
+    return date;
+  }
+
+  public void setDate(Date date) {
+    this.date = date;
+  }
+
+  public ReportPeriodEnum getPeriod() {
+    return period;
+  }
+
+  public void setPeriod(ReportPeriodEnum period) {
+    this.period = period;
+  }
+
+  public String getFileName() {
+    return fileName;
+  }
+
+  public void setFileName(String fileName) {
+    this.fileName = fileName;
+  }
+
+  public String getFileSize() {
+    return fileSize;
+  }
+
+  public void setFileSize(String fileSize) {
+    this.fileSize = fileSize;
+  }
+
 }

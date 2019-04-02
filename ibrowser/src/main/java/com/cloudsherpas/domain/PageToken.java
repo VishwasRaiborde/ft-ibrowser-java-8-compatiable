@@ -8,27 +8,26 @@ import com.cloudsherpas.dao.BaseEntity;
 @PersistenceCapable
 public class PageToken extends BaseEntity {
 
-	@Persistent
-	private String bucketName;
-	
-	@Persistent
-	private String nextPageToken;
+  @Persistent
+  private String bucketName;
 
-	public String getBucketName() {
-		return bucketName;
-	}
+  @Persistent
+  private String nextPageToken;
 
-	public void setBucketName(String bucketName) {
-		this.bucketName = bucketName;
-	}
+  public String getBucketName() {
+    return bucketName;
+  }
 
-	public String getNextPageToken() {
-		return nextPageToken;
-	}
+  public void setBucketName(String bucketName) {
+    this.bucketName = bucketName;
+  }
 
-	public void setNextPageToken(String nextPageToken) {
-		this.nextPageToken = nextPageToken;
-	}
-	
-	
+  public String getNextPageToken() {
+    return nextPageToken;
+  }
+
+  public void setNextPageToken(String nextPageToken) {
+    this.nextPageToken = nextPageToken;
+  }
+
 }

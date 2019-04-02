@@ -9,32 +9,28 @@ import com.cloudsherpas.dao.BaseEntity;
 
 @SuppressWarnings("serial")
 @PersistenceCapable
-public class Patch extends BaseEntity{
-	
-	@Persistent
-	private Date lastAfterDate;
-	
-	@Persistent
-	private long lastStart;
+public class Patch extends BaseEntity {
 
-	public Date getLastAfterDate() {
-		return lastAfterDate;
-	}
+  @Persistent
+  private Date lastAfterDate;
 
-	public void setLastAfterDate(Date lastAfterDate) {
-		this.lastAfterDate = lastAfterDate;
-	}
+  @Persistent
+  private long lastStart;
 
-	public long getLastStart() {
-		return lastStart;
-	}
+  public Date getLastAfterDate() {
+    return lastAfterDate;
+  }
 
-	public void setLastStart(long lastStart) {
-		this.lastStart = lastStart;
-	}
-	
-	
-	
-	
+  public void setLastAfterDate(Date lastAfterDate) {
+    this.lastAfterDate = lastAfterDate;
+  }
+
+  public long getLastStart() {
+    return lastStart;
+  }
+
+  public void setLastStart(long lastStart) {
+    this.lastStart = lastStart;
+  }
 
 }

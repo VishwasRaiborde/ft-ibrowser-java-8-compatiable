@@ -6,61 +6,61 @@ import javax.jdo.annotations.Persistent;
 import com.cloudsherpas.dao.BaseEntity;
 
 @PersistenceCapable
-public class UserFavouriteReport extends BaseEntity{
- 
-	@Persistent
-	private String userKey;
-	
-	@Persistent
-	private String reportKey;
-	
-	@Persistent
-	private String groupCode;
-	
-	@Persistent
-	private String title;
-	
-	@Persistent
-	private String groupName;
-	
-	public String getUserKey() {
-		return userKey;
-	}
+public class UserFavouriteReport extends BaseEntity {
 
-	public void setUserKey(String userKey) {
-		this.userKey = userKey;
-	}
+  @Persistent
+  private String userKey;
 
-	public String getReportKey() {
-		return reportKey;
-	}
+  @Persistent
+  private String reportKey;
 
-	public void setReportKey(String reportKey) {
-		this.reportKey = reportKey;
-	}
+  @Persistent
+  private String groupCode;
 
-	public String getGroupCode() {
-		return groupCode;
-	}
+  @Persistent
+  private String title;
 
-	public void setGroupCode(String groupCode) {
-		this.groupCode = groupCode;
-	}
+  @Persistent
+  private String groupName;
 
-	public String getTitle() {
-		return title;
-	}
+  public String getUserKey() {
+    return userKey;
+  }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+  public void setUserKey(String userKey) {
+    this.userKey = userKey;
+  }
 
-	public String getGroupName() {
-		return groupName;
-	}
+  public String getReportKey() {
+    return reportKey;
+  }
 
-	public void setGroupName(String groupName) {
-		this.groupName = groupName;
-	}
-   
+  public void setReportKey(String reportKey) {
+    this.reportKey = reportKey;
+  }
+
+  public String getGroupCode() {
+    return groupCode;
+  }
+
+  public void setGroupCode(String groupCode) {
+    this.groupCode = groupCode;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
+  }
+
+  public String getGroupName() {
+    return groupName;
+  }
+
+  public void setGroupName(String groupName) {
+    this.groupName = groupName;
+  }
+
 }

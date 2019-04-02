@@ -17,38 +17,38 @@ import com.google.inject.Singleton;
 @Singleton
 @SuppressWarnings("serial")
 public class SyncUsersGroups extends HttpServlet implements GlobalConstants {
-	
 
-	private final AppAuthFilter filter;
-	public final UserDao userDao;
-	
-	@Inject
-	public SyncUsersGroups(AppAuthFilter filter, UserDao userDao){
-		this.filter = filter;
-		this.userDao = userDao;
-	}
-	
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		
-		String email = req.getParameter("email");
-		if(email!=null){
-			AppUser user = userDao.getUser(email);
-			if(user == null){
-				user = new AppUser();
-				user.setEmail(email);
-			}
-			if(user !=null){
-				filter.syncUsersGroups(user);
-			}
-		}
-		
-	}
-	
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		super.doPost(req, resp);
-	}
-	
+  private final AppAuthFilter filter;
+  public final UserDao userDao;
+
+  @Inject
+  public SyncUsersGroups(AppAuthFilter filter, UserDao userDao) {
+    this.filter = filter;
+    this.userDao = userDao;
+  }
+
+  @Override
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
+
+    String email = req.getParameter("email");
+    if (email != null) {
+      AppUser user = userDao.getUser(email);
+      if (user == null) {
+        user = new AppUser();
+        user.setEmail(email);
+      }
+      if (user != null) {
+        filter.syncUsersGroups(user);
+      }
+    }
+
+  }
+
+  @Override
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
+    super.doPost(req, resp);
+  }
+
 }

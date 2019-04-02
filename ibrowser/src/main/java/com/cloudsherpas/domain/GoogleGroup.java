@@ -8,80 +8,81 @@ import com.cloudsherpas.dao.BaseEntity;
 
 @PersistenceCapable
 public class GoogleGroup extends BaseEntity {
-	
-    @Persistent
-    private String name;
 
-    @Persistent
-    private String code;
-    
-    @Persistent
-    private String email;
-    
-    @Persistent
-    private String description;
-    
-    @Persistent
-    private Boolean isSystem  = Boolean.FALSE;
-    
-    @NotPersistent
-    private Boolean allowedGroup = Boolean.FALSE;
-    
-    @NotPersistent
-    private Boolean deniedGroup = Boolean.FALSE;
+  @Persistent
+  private String name;
 
-	public String getName() {
-		return name;
-	}
+  @Persistent
+  private String code;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+  @Persistent
+  private String email;
 
-	public String getCode() {
-		return code;
-	}
+  @Persistent
+  private String description;
 
-	public void setCode(String code) {
-		this.code = code;
-	}	
-	public String getEmail() {
-		return email;
-	}
+  @Persistent
+  private Boolean isSystem = Boolean.FALSE;
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+  @NotPersistent
+  private Boolean allowedGroup = Boolean.FALSE;
 
-	public String getDescription() {
-		return description;
-	}
+  @NotPersistent
+  private Boolean deniedGroup = Boolean.FALSE;
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
-    
-	public Boolean getIsSystem() {
-		return isSystem;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public void setIsSystem(Boolean isSystem) {
-		this.isSystem = isSystem;
-	}
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	public Boolean getAllowedGroup() {
-		return allowedGroup;
-	}
+  public String getCode() {
+    return code;
+  }
 
-	public void setAllowedGroup(Boolean allowedGroup) {
-		this.allowedGroup = allowedGroup;
-	}
+  public void setCode(String code) {
+    this.code = code;
+  }
 
-	public Boolean getDeniedGroup() {
-		return deniedGroup;
-	}
+  public String getEmail() {
+    return email;
+  }
 
-	public void setDeniedGroup(Boolean deniedGroup) {
-		this.deniedGroup = deniedGroup;
-	}
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public Boolean getIsSystem() {
+    return isSystem;
+  }
+
+  public void setIsSystem(Boolean isSystem) {
+    this.isSystem = isSystem;
+  }
+
+  public Boolean getAllowedGroup() {
+    return allowedGroup;
+  }
+
+  public void setAllowedGroup(Boolean allowedGroup) {
+    this.allowedGroup = allowedGroup;
+  }
+
+  public Boolean getDeniedGroup() {
+    return deniedGroup;
+  }
+
+  public void setDeniedGroup(Boolean deniedGroup) {
+    this.deniedGroup = deniedGroup;
+  }
 }

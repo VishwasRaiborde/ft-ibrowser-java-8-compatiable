@@ -12,54 +12,55 @@ import com.google.appengine.api.datastore.Text;
 
 @PersistenceCapable
 public class News extends BaseEntity {
-	
-	@Persistent
-	private String title;
-	
-	@Persistent
-	private Text description;
-	
-	@Persistent
-	private Date date;
-	
-	@NotPersistent
-	private String dateAsString;
-	
-	public String getTitle() {
-		return title;
-	}
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+  @Persistent
+  private String title;
 
-	public String getDescription() {
-		if(!"".equals(description) && description!=null){
-			return description.getValue();
-		}
-		return null;
-	}
+  @Persistent
+  private Text description;
 
-	public void setDescription(String description) {
-			this.description = new Text(description);		
-	}
+  @Persistent
+  private Date date;
 
-	public Date getDate() {
-		return date;
-	}
+  @NotPersistent
+  private String dateAsString;
 
-	public void setDate(Date date) {
-		this.date = date;
-	}
-	
-	public String getDateAsString() {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-		if (dateAsString == null && date!=null) {
-			dateAsString = dateFormat.format(date);
-		}
-		return dateAsString;
-	}
-	public void setDateAsString(String dateAsString) {
-		this.dateAsString = dateAsString;
-	}
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
+  }
+
+  public String getDescription() {
+    if (!"".equals(description) && description != null) {
+      return description.getValue();
+    }
+    return null;
+  }
+
+  public void setDescription(String description) {
+    this.description = new Text(description);
+  }
+
+  public Date getDate() {
+    return date;
+  }
+
+  public void setDate(Date date) {
+    this.date = date;
+  }
+
+  public String getDateAsString() {
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    if (dateAsString == null && date != null) {
+      dateAsString = dateFormat.format(date);
+    }
+    return dateAsString;
+  }
+
+  public void setDateAsString(String dateAsString) {
+    this.dateAsString = dateAsString;
+  }
 }

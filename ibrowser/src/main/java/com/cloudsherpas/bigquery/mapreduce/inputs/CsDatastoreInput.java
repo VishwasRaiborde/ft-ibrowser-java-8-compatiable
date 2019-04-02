@@ -42,11 +42,11 @@ public final class CsDatastoreInput extends Input<Entity> {
   private static final int SCATTER_ENTITIES_PER_SHARD = 32;
   private static final long serialVersionUID = -3939543473076385308L;
   private static final Comparator<Entity> ENTITY_COMPARATOR = new Comparator<Entity>() {
-        @Override
-        public int compare(Entity o1, Entity o2) {
-          return o1.getKey().compareTo(o2.getKey());
-        }
-      };
+    @Override
+    public int compare(Entity o1, Entity o2) {
+      return o1.getKey().compareTo(o2.getKey());
+    }
+  };
 
   private final String entityKind;
   private final int shardCount;
@@ -119,17 +119,17 @@ public final class CsDatastoreInput extends Input<Entity> {
     // We need to determine #shards - 1 split points to divide entity space into equal shards. We
     // oversample the entities with scatter properties to get a better approximation.
     // Note: there is a region of entities before and after each scatter entity:
-    //    |---*------*------*------*------*------*------*---|  * = scatter entity,   - = entity
+    // |---*------*------*------*------*------*------*---| * = scatter entity, - = entity
     // so if each scatter entity represents the region following it, there is an extra region before
     // the first scatter entity. Thus we query for one less than the desired number of regions to
     // account for the this extra region before the first scatter entity
     int desiredNumScatterEntities = (shardCount * SCATTER_ENTITIES_PER_SHARD) - 1;
     Query scatter = createQuery(entityKind, namespace)
-        //.addSort(SCATTER_RESERVED_PROPERTY) //TODO 
-        //.setKeysOnly() //TODO
-        ;
-    List<Entity> scatterKeys = datastoreService.prepare(scatter).asList(
-        withLimit(desiredNumScatterEntities));
+    // .addSort(SCATTER_RESERVED_PROPERTY) //TODO
+    // .setKeysOnly() //TODO
+    ;
+    List<Entity> scatterKeys = datastoreService.prepare(scatter)
+        .asList(withLimit(desiredNumScatterEntities));
     Collections.sort(scatterKeys, ENTITY_COMPARATOR);
     logger.info("Requested " + desiredNumScatterEntities + " scatter entities, retrieved "
         + scatterKeys.size());
@@ -166,48 +166,49 @@ public final class CsDatastoreInput extends Input<Entity> {
 
   private Key getStartKey(DatastoreService datastoreService) {
     Query ascending = createQuery(entityKind, namespace)
-        //.addSort(Entity.KEY_RESERVED_PROPERTY) //TODO
-        //.setKeysOnly()
-    	;
+    // .addSort(Entity.KEY_RESERVED_PROPERTY) //TODO
+    // .setKeysOnly()
+    ;
     Iterator<Entity> ascendingIt = datastoreService.prepare(ascending).asIterator(withLimit(1));
     if (!ascendingIt.hasNext()) {
       return null;
     }
-    
+
     return ascendingIt.next().getKey();
   }
 
   static Query createQuery(String kind, String namespace) {
-	Query q = null;
+    Query q = null;
     if (namespace == null) {
       q = new Query(kind);
-      
+
       GregorianCalendar gFrom = new GregorianCalendar();
-      gFrom.setTime(new Date()); 
-      gFrom.add(GregorianCalendar.DATE, -1);
+      gFrom.setTime(new Date());
+      gFrom.add(Calendar.DATE, -1);
       DateUtils.setStartOfDay(gFrom);
-      
+
       GregorianCalendar gTo = new GregorianCalendar();
-      gTo.setTime((Date)gFrom.getTime().clone()); 
+      gTo.setTime((Date) gFrom.getTime().clone());
       DateUtils.setEndOfDay(gTo);
-      
-      Filter filter = new FilterPredicate("viewDate", 
-    		  FilterOperator.GREATER_THAN_OR_EQUAL,gFrom.getTime());
-      Filter filter2 = new FilterPredicate("viewDate", 
-    		  FilterOperator.LESS_THAN_OR_EQUAL, gTo.getTime());
+
+      Filter filter = new FilterPredicate("viewDate", FilterOperator.GREATER_THAN_OR_EQUAL,
+          gFrom.getTime());
+      Filter filter2 = new FilterPredicate("viewDate", FilterOperator.LESS_THAN_OR_EQUAL,
+          gTo.getTime());
       filter = CompositeFilterOperator.and(filter, filter2);
       q.setFilter(filter);
-      
+
       return q;
     }
     String ns = NamespaceManager.get();
     try {
       NamespaceManager.set(namespace);
       q = new Query(kind);
-      
-      Filter filter = new FilterPredicate("status", FilterOperator.EQUAL, EntityTransferStatus.READY_TO_TRANSFER.getCode());
+
+      Filter filter = new FilterPredicate("status", FilterOperator.EQUAL,
+          EntityTransferStatus.READY_TO_TRANSFER.getCode());
       q.setFilter(filter);
-      
+
       return q;
     } finally {
       NamespaceManager.set(ns);

@@ -8,26 +8,26 @@ import com.cloudsherpas.dao.BaseEntity;
 @PersistenceCapable
 public class Heading extends BaseEntity {
 
-	@Persistent
-	private String name;
+  @Persistent
+  private String name;
 
-	@Persistent
-	private Integer order;
-	
-	public String getName() {
-		return name;
-	}
+  @Persistent
+  private Integer order;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public Integer getOrder() {
-		return order;
-	}
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	public void setOrder(Integer order) {
-		this.order = order;
-	}
+  public Integer getOrder() {
+    return order;
+  }
+
+  public void setOrder(Integer order) {
+    this.order = order;
+  }
 
 }
