@@ -11,35 +11,19 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 	</properties>
 	<packaging>war</packaging>
-	
 
-	<profiles>
-		<profile>
-			<id>qa</id>
-			<build>
-				<plugins>
-					<plugin>
-						<artifactId>maven-dependency-plugin</artifactId>
-						<executions>
-							<execution>
-								<phase>install</phase>
-								<goals>
-									<goal>copy-dependencies</goal>
-								</goals>
-								<configuration>
-									<outputDirectory>war/WEB-INF/lib</outputDirectory>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
+
+	<!-- <profiles> <profile> <id>qa</id> <build> <plugins> <plugin> <artifactId>maven-dependency-plugin</artifactId> 
+		<executions> <execution> <phase>install</phase> <goals> <goal>copy-dependencies</goal> 
+		</goals> <configuration> <outputDirectory>war/WEB-INF/lib</outputDirectory> 
+		</configuration> </execution> </executions> </plugin> </plugins> </build> 
+		</profile> </profiles> -->
 
 	<build>
 		<finalName>ibrowser</finalName>
 		<sourceDirectory>src/main/java</sourceDirectory>
+		<!-- configuration to copy maven managed classes into war web-inf libs 
+			as GCP assembly needs libs in war folder -->
 		<outputDirectory>war/WEB-INF/classes</outputDirectory>
 		<resources>
 			<resource>
@@ -56,7 +40,8 @@
 			</resource>
 		</resources>
 		<plugins>
-
+			<!-- plugin to copy maven managed dependencies into war web-inf libs as 
+				GCP assembly needs libs in war folder -->
 			<plugin>
 				<artifactId>maven-dependency-plugin</artifactId>
 				<executions>
@@ -89,10 +74,7 @@
 				</configuration>
 			</plugin>
 
-			<!-- <plugin> <groupId>org.datanucleus</groupId> <artifactId>datanucleus-maven-plugin</artifactId> 
-				<version>5.0.2</version> <configuration> <log4jConfiguration>${basedir}/log4j.properties</log4jConfiguration> 
-				<verbose>true</verbose> </configuration> <executions> <execution> <phase>process-classes</phase> 
-				<goals> <goal>enhance</goal> </goals> </execution> </executions> </plugin> -->
+			<!-- JDO classes enhancer -->
 			<plugin>
 				<groupId>com.google.cloud.tools</groupId>
 				<artifactId>appengine-maven-plugin</artifactId>
@@ -130,18 +112,6 @@
 	</build>
 
 	<dependencies>
-		<!-- Compile/runtime dependencies -->
-		<!-- <dependency> <groupId>javax.servlet</groupId> <artifactId>javax.servlet-api</artifactId> 
-			<version>3.1.0</version> <scope>provided</scope> </dependency> <dependency> 
-			<groupId>javax.servlet.jsp</groupId> <artifactId>javax.servlet.jsp-api</artifactId> 
-			<version>2.3.1</version> <scope>provided</scope> </dependency> <dependency> 
-			<groupId>jstl</groupId> <artifactId>jstl</artifactId> <version>1.2</version> 
-			</dependency> <dependency> <groupId>com.googlecode.objectify</groupId> <artifactId>objectify</artifactId> 
-			<version>5.1.22</version> </dependency> <dependency> <groupId>com.google.endpoints</groupId> 
-			<artifactId>endpoints-framework</artifactId> <version>2.2.1</version> </dependency> -->
-		<!-- <dependency> <groupId>com.google.appengine</groupId> <artifactId>appengine-api-1.0-sdk</artifactId> 
-			<version>1.9.73</version> </dependency> -->
-
 
 		<!-- https://mvnrepository.com/artifact/aopalliance/aopalliance -->
 		<dependency>
@@ -515,6 +485,7 @@
 			<version>0</version>
 			<systemPath>${basedir}/src/lib/appengine-api-1.0-sdk-1.9.64.jar</systemPath>
 		</dependency>
+		<!-- endoresed from web lib as cannot track these ones from m2 repo -->
 		<dependency>
 			<artifactId>appengine-api-labs</artifactId>
 			<groupId>appengine-api-labs.jar</groupId>
@@ -522,7 +493,7 @@
 			<version>0</version>
 			<systemPath>${basedir}/src/lib/appengine-api-labs.jar</systemPath>
 		</dependency>
-
+		<!-- endoresed from web lib as cannot track these ones from m2 repo -->
 		<dependency>
 			<artifactId>appengine-mapreduce</artifactId>
 			<groupId>appengine-mapreduce.jar</groupId>
@@ -530,7 +501,7 @@
 			<version>0</version>
 			<systemPath>${basedir}/src/lib/appengine-mapreduce.jar</systemPath>
 		</dependency>
-
+		<!-- endoresed from web lib as cannot track these ones from m2 repo -->
 		<dependency>
 			<artifactId>appengine-pipeline</artifactId>
 			<groupId>appengine-pipeline.jar</groupId>
@@ -538,7 +509,7 @@
 			<version>0</version>
 			<systemPath>${basedir}/src/lib/appengine-pipeline.jar</systemPath>
 		</dependency>
-
+		<!-- endoresed from web lib as cannot track these ones from m2 repo -->
 		<dependency>
 			<artifactId>appengine-tools-api-1.2.0</artifactId>
 			<groupId>appengine-tools-api-1.2.0.jar</groupId>
@@ -546,7 +517,7 @@
 			<scope>system</scope>
 			<systemPath>${basedir}/src/lib/appengine-tools-api-1.2.0.jar</systemPath>
 		</dependency>
-
+		<!-- endoresed from web lib as cannot track these ones from m2 repo -->
 		<dependency>
 			<artifactId>asm-4.0</artifactId>
 			<groupId>asm-4.0</groupId>
@@ -554,7 +525,7 @@
 			<scope>system</scope>
 			<systemPath>${basedir}/src/lib/asm-4.0.jar</systemPath>
 		</dependency>
-
+		<!-- endoresed from web lib as cannot track these ones from m2 repo -->
 		<dependency>
 			<artifactId>google-api-services-storage-v1-rev21-1.19.0</artifactId>
 			<groupId>google-api-services-storage-v1-rev21-1.19.0</groupId>
@@ -562,7 +533,7 @@
 			<scope>system</scope>
 			<systemPath>${basedir}/src/lib/google-api-services-storage-v1-rev21-1.19.0.jar</systemPath>
 		</dependency>
-
+		<!-- endoresed from web lib as cannot track these ones from m2 repo -->
 		<dependency>
 			<artifactId>javax.inject-2.1.71</artifactId>
 			<groupId>javax.inject-2.1.71</groupId>
@@ -586,7 +557,7 @@
 			<scope>system</scope>
 			<systemPath>${basedir}/src/lib/jetty-util-6.1.26.jar</systemPath>
 		</dependency>
-
+		<!-- endoresed from web lib as cannot track these ones from m2 repo -->
 		<dependency>
 			<artifactId>json</artifactId>
 			<groupId>json</groupId>
@@ -594,7 +565,7 @@
 			<scope>system</scope>
 			<systemPath>${basedir}/src/lib/json.jar</systemPath>
 		</dependency>
-
+		<!-- endoresed from web lib as cannot track these ones from m2 repo -->
 		<dependency>
 			<artifactId>litemvc-0.1.2</artifactId>
 			<groupId>litemvc-0.1.2</groupId>
@@ -602,7 +573,7 @@
 			<scope>system</scope>
 			<systemPath>${basedir}/src/lib/litemvc-0.1.2.jar</systemPath>
 		</dependency>
-
+		<!-- endoresed from web lib as cannot track these ones from m2 repo -->
 		<dependency>
 			<artifactId>log4j-1.2.13</artifactId>
 			<groupId>log4j-1.2.13</groupId>
@@ -610,7 +581,7 @@
 			<scope>system</scope>
 			<systemPath>${basedir}/src/lib/log4j-1.2.13.jar</systemPath>
 		</dependency>
-
+		<!-- endoresed from web lib as cannot track these ones from m2 repo -->
 		<dependency>
 			<artifactId>velocity-1.7-dep</artifactId>
 			<groupId>velocity-1.7-dep</groupId>
@@ -618,7 +589,7 @@
 			<scope>system</scope>
 			<systemPath>${basedir}/src/lib/velocity-1.7-dep.jar</systemPath>
 		</dependency>
-
+		<!-- endoresed from web lib as cannot track these ones from m2 repo -->
 		<dependency>
 			<artifactId>fastutil_small</artifactId>
 			<groupId>fastutil_small</groupId>
@@ -626,7 +597,7 @@
 			<scope>system</scope>
 			<systemPath>${basedir}/src/lib/fastutil_small.jar</systemPath>
 		</dependency>
-
+		<!-- endoresed from web lib as cannot track these ones from m2 repo -->
 		<dependency>
 			<artifactId>appengine-gcs-client</artifactId>
 			<groupId>appengine-gcs-client</groupId>
@@ -634,12 +605,14 @@
 			<scope>system</scope>
 			<systemPath>${basedir}/src/lib/appengine-gcs-client.jar</systemPath>
 		</dependency>
-
+		<!-- endoresed from web lib as cannot track these ones from m2 repo -->
 		<dependency>
 			<groupId>com.googlecode.objectify</groupId>
 			<artifactId>objectify</artifactId>
 			<version>6.0.3</version>
 		</dependency>
+
+
 		<dependency>
 			<groupId>com.google.cloud</groupId>
 			<artifactId>google-cloud-datastore</artifactId>
