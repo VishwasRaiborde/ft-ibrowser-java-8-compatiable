@@ -14,6 +14,7 @@
 
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
+		<outputDirectory>war/WEB-INF/classes</outputDirectory>
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
@@ -37,6 +38,7 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
+			
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>3.2.1</version>
@@ -44,6 +46,7 @@
 					<warSourceDirectory>war</warSourceDirectory>
 				</configuration>
 			</plugin>
+			
 			<!-- <plugin> <groupId>org.datanucleus</groupId> <artifactId>datanucleus-maven-plugin</artifactId> 
 				<version>5.0.2</version> <configuration> <log4jConfiguration>${basedir}/log4j.properties</log4jConfiguration> 
 				<verbose>true</verbose> </configuration> <executions> <execution> <phase>process-classes</phase> 
@@ -468,14 +471,14 @@
 			<groupId>appengine-api-1.0-sdk-1.9.64</groupId>
 			<scope>system</scope>
 			<version>0</version>
-			<systemPath>${basedir}/war/WEB-INF/lib/appengine-api-1.0-sdk-1.9.64.jar</systemPath>
+			<systemPath>${basedir}/src/lib/appengine-api-1.0-sdk-1.9.64.jar</systemPath>
 		</dependency>
 		<dependency>
 			<artifactId>appengine-api-labs</artifactId>
 			<groupId>appengine-api-labs.jar</groupId>
 			<scope>system</scope>
 			<version>0</version>
-			<systemPath>${basedir}/war/WEB-INF/lib/appengine-api-labs.jar</systemPath>
+			<systemPath>${basedir}/src/lib/appengine-api-labs.jar</systemPath>
 		</dependency>
 
 		<dependency>
@@ -483,7 +486,7 @@
 			<groupId>appengine-mapreduce.jar</groupId>
 			<scope>system</scope>
 			<version>0</version>
-			<systemPath>${basedir}/war/WEB-INF/lib/appengine-mapreduce.jar</systemPath>
+			<systemPath>${basedir}/src/lib/appengine-mapreduce.jar</systemPath>
 		</dependency>
 
 		<dependency>
@@ -491,7 +494,7 @@
 			<groupId>appengine-pipeline.jar</groupId>
 			<scope>system</scope>
 			<version>0</version>
-			<systemPath>${basedir}/war/WEB-INF/lib/appengine-pipeline.jar</systemPath>
+			<systemPath>${basedir}/src/lib/appengine-pipeline.jar</systemPath>
 		</dependency>
 
 		<dependency>
@@ -499,7 +502,7 @@
 			<groupId>appengine-tools-api-1.2.0.jar</groupId>
 			<version>0</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/war/WEB-INF/lib/appengine-tools-api-1.2.0.jar</systemPath>
+			<systemPath>${basedir}/src/lib/appengine-tools-api-1.2.0.jar</systemPath>
 		</dependency>
 
 		<dependency>
@@ -507,7 +510,7 @@
 			<groupId>asm-4.0</groupId>
 			<version>0</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/war/WEB-INF/lib/asm-4.0.jar</systemPath>
+			<systemPath>${basedir}/src/lib/asm-4.0.jar</systemPath>
 		</dependency>
 
 		<dependency>
@@ -515,7 +518,7 @@
 			<groupId>google-api-services-storage-v1-rev21-1.19.0</groupId>
 			<version>0</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/war/WEB-INF/lib/google-api-services-storage-v1-rev21-1.19.0.jar</systemPath>
+			<systemPath>${basedir}/src/lib/google-api-services-storage-v1-rev21-1.19.0.jar</systemPath>
 		</dependency>
 
 		<dependency>
@@ -523,7 +526,7 @@
 			<groupId>javax.inject-2.1.71</groupId>
 			<version>0</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/war/WEB-INF/lib/javax.inject-2.1.71.jar</systemPath>
+			<systemPath>${basedir}/src/lib/javax.inject-2.1.71.jar</systemPath>
 		</dependency>
 
 		<dependency>
@@ -531,7 +534,7 @@
 			<groupId>jetty-6.1.26</groupId>
 			<version>0</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/war/WEB-INF/lib/jetty-6.1.26.jar</systemPath>
+			<systemPath>${basedir}/src/lib/jetty-6.1.26.jar</systemPath>
 		</dependency>
 
 		<dependency>
@@ -539,7 +542,7 @@
 			<groupId>jetty-util-6.1.26</groupId>
 			<version>0</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/war/WEB-INF/lib/jetty-util-6.1.26.jar</systemPath>
+			<systemPath>${basedir}/src/lib/jetty-util-6.1.26.jar</systemPath>
 		</dependency>
 
 		<dependency>
@@ -547,7 +550,7 @@
 			<groupId>json</groupId>
 			<version>0</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/war/WEB-INF/lib/json.jar</systemPath>
+			<systemPath>${basedir}/src/lib/json.jar</systemPath>
 		</dependency>
 
 		<dependency>
@@ -555,7 +558,7 @@
 			<groupId>litemvc-0.1.2</groupId>
 			<version>0</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/war/WEB-INF/lib/litemvc-0.1.2.jar</systemPath>
+			<systemPath>${basedir}/src/lib/litemvc-0.1.2.jar</systemPath>
 		</dependency>
 
 		<dependency>
@@ -563,7 +566,7 @@
 			<groupId>log4j-1.2.13</groupId>
 			<version>0</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/war/WEB-INF/lib/log4j-1.2.13.jar</systemPath>
+			<systemPath>${basedir}/src/lib/log4j-1.2.13.jar</systemPath>
 		</dependency>
 
 		<dependency>
@@ -571,7 +574,7 @@
 			<groupId>velocity-1.7-dep</groupId>
 			<version>0</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/war/WEB-INF/lib/velocity-1.7-dep.jar</systemPath>
+			<systemPath>${basedir}/src/lib/velocity-1.7-dep.jar</systemPath>
 		</dependency>
 
 		<dependency>
@@ -579,7 +582,7 @@
 			<groupId>fastutil_small</groupId>
 			<version>0</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/war/WEB-INF/lib/fastutil_small.jar</systemPath>
+			<systemPath>${basedir}/src/lib/fastutil_small.jar</systemPath>
 		</dependency>
 
 		<dependency>
@@ -587,7 +590,7 @@
 			<groupId>appengine-gcs-client</groupId>
 			<version>0</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/war/WEB-INF/lib/appengine-gcs-client.jar</systemPath>
+			<systemPath>${basedir}/src/lib/appengine-gcs-client.jar</systemPath>
 		</dependency>
 
 		<dependency>
