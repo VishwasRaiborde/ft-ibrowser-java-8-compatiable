@@ -13,11 +13,29 @@
 	<packaging>war</packaging>
 
 
-	<!-- <profiles> <profile> <id>qa</id> <build> <plugins> <plugin> <artifactId>maven-dependency-plugin</artifactId> 
-		<executions> <execution> <phase>install</phase> <goals> <goal>copy-dependencies</goal> 
-		</goals> <configuration> <outputDirectory>war/WEB-INF/lib</outputDirectory> 
-		</configuration> </execution> </executions> </plugin> </plugins> </build> 
-		</profile> </profiles> -->
+	<profiles>
+		<profile>
+			<id>qa</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>install</phase>
+								<goals>
+									<goal>copy-dependencies</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>war/WEB-INF/lib</outputDirectory>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 	<build>
 		<finalName>ibrowser</finalName>
@@ -109,6 +127,42 @@
 				</dependencies>
 			</plugin>
 		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.datanucleus
+										</groupId>
+										<artifactId>
+											maven-datanucleus-plugin
+										</artifactId>
+										<versionRange>
+											[3.2.0-m1,)
+										</versionRange>
+										<goals>
+											<goal>enhance</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 
 	<dependencies>
