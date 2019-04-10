@@ -1,0 +1,7 @@
+install google sdk on your local system
+gcloud should work on the cmd or shell
+
+install cloud tool for eclipse
+https://cloud.google.com/eclipse/docs/quickstart
+
+gcloud components install app-engine-java
